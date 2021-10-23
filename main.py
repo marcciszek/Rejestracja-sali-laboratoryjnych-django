@@ -1,2 +1,7 @@
-if __name__ == "__main__":
-    pass # write smth here
+print("hello world")
+
+x = -1
+
+while x < 5:
+    print("kajtek")
+    x = x+1
