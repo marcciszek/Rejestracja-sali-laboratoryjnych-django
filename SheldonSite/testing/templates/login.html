@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+    <title>Zaloguj - System rezerwacji pracowni fizycznych</title>
+<style>
+    #main-container
+    {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border:2px solid #4c8bd9;
+        padding:20px 150px;
+    }
+    .logininput
+    {
+        display:block;
+    }
+
+    #site-name
+    {
+        text-align:center;
+    }
+
+    label.required
+    {
+        display:block;
+        text-align:center;
+        padding:5px;
+    }
+
+    #id_submit
+    {
+        display:block;
+        margin:auto;
+        cursor:pointer;
+    }
+
+    .submit-row
+    {
+        padding:10px;
+    }
+
+    .forgot-password-row
+    {
+        text-align:center;
+    }
+
+    #id_forgot_password
+    {
+        text-decoration:initial;
+        color:#4c8bd9;
+    }
+
+    #id_forgot_password:hover
+    {
+        color:blue;
+    }
+
+    .input_text
+    {
+
+    }
+
+
+</style>
+    {% load static %}
+    <link  rel="stylesheet" type="text/css" href="{% static 'nav.css' %}"/>
+    <!-- W przyszłości damy tu stylesheety css, na razie tag style z zawartością css  -->
+</head>
+<body>
+
+    <h1>System rezerwacji pracowni fizycznych w centrum nauki technologii</h1>
+    <ul>
+  <li><a href="#home">Home</a></li>
+  <li><a href="#news">News</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">About</a></li>
+</ul>
+    <div id = "main-container">
+        <div id="header">
+            <h3 id="site-name">Zaloguj</h3>
+        </div>
+        <div id="content-main">
+            <form method="post" id="login-form"><!-- <input type="hidden" name="csrfmiddlewaretoken" value="N7lgIwEX4A5aR6H9rEsgYvJ7NZrcw9gbb0ScLnUK2u3t9JNUaS2GRMXCSik5uEo0"> -->
+              <div class="form-row">
+                <label class="required" for="id_email">E-mail</label>
+                <input class="input_text" type="text" name="email" autofocus autocapitalize="none" autocomplete="" maxlength="150" required id="id_email">
+              </div>
+              <div class="form-row">
+                <label class="required" for="id_password">Hasło</label>
+                <input class="input_text"  type="password" name="password" autocomplete="current-password" required id="id_password">
+              </div>
+              <div class="submit-row">
+                <input id="id_submit" type="submit" value="Zaloguj">
+              </div>
+              <div class="forgot-password-row">
+                <a id = "id_forgot_password" href = "/forgot">Zapomniałem hasła</a>
+              </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
