@@ -1,0 +1,12 @@
+{% extends "laboratoria/base.html" %}
+
+{% block title %}{{room.title}}{% endblock %}
+
+{% block content %}
+    <h1>{{room.title}}</h1>
+    <h3>Pietro: {{room.floor}}</h3>
+    <h3>Pokój numer: {{room.room_number}}</h3>
+    <h2>
+        {{room.description|linebreaks}}
+    </h2>
+{% endblock %}
