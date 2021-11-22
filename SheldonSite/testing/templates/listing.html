@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+    <title>Lista - System rezerwacji pracowni fizycznych</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+ul#navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 5px;
+  margin: 0;
+  list-style: none;
+  background-color:blue;
+  align-items:stretch;
+}
+
+ul#navbar li {
+background-color:lightblue;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  text-align: center;
+  margin:0 3px 0 0;
+  border-radius:5px;
+  flex:1;
+}
+
+ul#navbar .navbaritem-profile{
+    flex-grow:3;
+}
+
+li a {
+  display: block;
+  padding: 8px;
+}
+
+img#polsl-logo{
+    max-width:200px;
+    max-height:200px;
+    display:inline;
+    vertical-align:middle;
+}
+
+div#room-container{
+    display:block;
+}
+
+.table-row {
+    display:flex;
+    flex-wrap:wrap;
+    padding:10px;
+    border:2px solid blue;
+}
+
+.table-row > div {
+    display:flex;
+    min-width:200px;
+}
+
+.table-row > div > div {
+    min-width:100px;
+    padding:5px;
+}
+
+#website-title-header {
+    display:inline;
+    margin:0px 20px;
+    font-size:0px;
+    text-wrap:wrap;
+}
+@media screen and (min-width:1200px){
+    #website-title-header{
+        font-size:30px;
+    }
+}
+
+
+</style>
+    {% load static %}
+    <!-- <link  rel="stylesheet" type="text/css" href="{% static 'nav.css' %}"/> -->
+    <!-- W przyszłości damy tu stylesheety css, na razie tag style z zawartością css  -->
+</head>
+<body>
+    <div id = "main-header" style="display: table; overflow: hidden;">
+      <div style="display: table-cell; vertical-align: middle;">
+        <div>
+            <img id = "polsl-logo" src="{% static 'img/polsl_logo.png' %}" alt = "Politechnika Śląska" style="" />
+            <p id = "website-title-header" >System rezerwacji pracowni fizycznych w centrum nauki technologii</p>
+        </div>
+      </div>
+    </div>
+    <ul id = "navbar">
+      <li class="navbaritem"><a href="#home">Home</a></li>
+      <li class="navbaritem"><a href="#news">Info</a></li>
+        <li class="navbaritem"><a href="#news">Kontakt</a></li>
+      <li class="navbaritem navbaritem-profile"><a href="#about">Profil</a></li>
+    </ul>
+    <div id = "main-container">
+        <div id = "room-container" style="display:grid;">
+            <div class = "table-row header">
+            </div>
+            <div class = "table-row">
+                <div class = "wrapper-room-id">
+                    <div class = "room-intable-id">1.</div>
+                </div>
+                <div class = "wrapper-room-location">
+                    <div class = "room-floor">Parter</div>
+                    <div class = "room-id">38</div>
+                </div>
+                <div class = "wrapper-room-name">
+                    <div class = "room-name">Laboratorium Spektroskopii</div>
+                </div>
+                <div class = "wrapper-room-description">
+                    <div class = "room-description">lorem  lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum</div>
+                </div>
+                <div class = "wrapper-room-status">
+                    <div class = "room-status">Dostępny</div>
+                    <div class = "room-status-icon">X</div>
+                    <div class = "room-order-button">Zarezerwuj</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -24,4 +24,5 @@ urlpatterns = [
     path('',mainviews.index),
     path('login',mainviews.login),
     path('login2',mainviews.login2),
+    path('lista',mainviews.lista)
 ]
