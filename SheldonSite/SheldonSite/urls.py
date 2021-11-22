@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+from . import main_views
 
 urlpatterns = [
+    path('', main_views.homepage, name='homepage'),
     path('admin/', admin.site.urls),
     path('laboratoria/', include('Laboratoria.urls', namespace='laboratoria')),
+    path('account/', include('account.urls', namespace='account')),
+    # path('', lambda request: redirect('laboratoria/', permanent=True)),
 ]

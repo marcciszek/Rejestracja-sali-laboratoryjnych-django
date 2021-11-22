@@ -1,6 +1,14 @@
-{% extends "laboratoria/base.html" %}
+{% extends "laboratoria/base_lab.html" %}
 
 {% block title %}{{room.title}}{% endblock %}
+
+{% block mainpage %}
+  <h1>
+    <a href="{% url 'laboratoria:room_list' %}">
+      Instytut Fizyki
+    </a>
+  </h1>
+{% endblock %}
 
 {% block content %}
     <h1>{{room.title}}</h1>

@@ -1,14 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    </div>
+    {% block content %}
+    {% endblock %}
 </body>
+<footer>
+    <p><a href="{% url 'homepage' %}">Strona główna</a>.</p>
+</footer>
 </html>
