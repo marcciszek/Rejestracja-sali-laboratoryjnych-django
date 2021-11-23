@@ -47,33 +47,76 @@ div#room-container{
     display:block;
 }
 
+#main-container{
+  margin: 20px;
+  padding: 10px;
+}
+
 .table-row {
     display:flex;
     flex-wrap:wrap;
-    padding:10px;
-    border:2px solid blue;
+    align-items: stretch;
+    border:1px solid blue;
+    gap:15px;
 }
 
-.table-row > div {
+.table-header{
+  background: gray;
+}
+
+.table-row > div.table-wrapper {
     display:flex;
-    min-width:200px;
+    flex-basis: 400px;
+    max-width: 400px;
 }
 
 .table-row > div > div {
-    min-width:100px;
     padding:5px;
+}
+
+.wrapper-room-id{
+
+}
+
+.wrapper-room-location{
+}
+
+.wrapper-room-location > div{
+  width: 50%;
+}
+
+.wrapper-room-name{
+
+}
+
+.wrapper-room-status{
+
+}
+
+.wrapper-room-name > div{
+  width: 50%;
+}
+
+.room-description{
+  font-style: italic;
+  cursor: pointer;
 }
 
 #website-title-header {
     display:inline;
     margin:0px 20px;
     font-size:0px;
-    text-wrap:wrap;
 }
 @media screen and (min-width:1200px){
     #website-title-header{
         font-size:30px;
     }
+}
+
+@media screen and (max-width:500px){
+    .table-row > div.table-wrapper {
+    flex-direction: column;
+}
 }
 
 
@@ -99,24 +142,57 @@ div#room-container{
     </ul>
     <div id = "main-container">
         <div id = "room-container" style="display:grid;">
-            <div class = "table-row header">
+            <div class = "table-row table-header">
+              <div class = "table-wrapper wrapper-room-id">
+                    <div class = "room-intable-id">ID</div>
+                </div>
+                <div class = "table-wrapper wrapper-room-location">
+                    <div class = "room-floor">Piętro</div>
+                    <div class = "room-id">Nr sali</div>
+                </div>
+                <div class = "table-wrapper wrapper-room-name">
+                    <div class = "room-name">Nazwa laboratorium</div>
+                    <div class = "room-description" style="cursor: initial;">Opis laboratorium</div>
+                </div>
+
+                <div class = "table-wrapper wrapper-room-status">
+                    <div class = "room-status">Dostępność</div>
+                    <div class = "room-status-icon" style="visibility: hidden;"></div>
+                    <div class = "room-order-button" style="visibility: hidden;">Zarezerwuj</div>
+                </div>
             </div>
             <div class = "table-row">
-                <div class = "wrapper-room-id">
+                <div class = "table-wrapper wrapper-room-id">
                     <div class = "room-intable-id">1.</div>
                 </div>
-                <div class = "wrapper-room-location">
+                <div class = "table-wrapper wrapper-room-location">
                     <div class = "room-floor">Parter</div>
                     <div class = "room-id">38</div>
                 </div>
-                <div class = "wrapper-room-name">
+                <div class = "table-wrapper wrapper-room-name">
                     <div class = "room-name">Laboratorium Spektroskopii</div>
+                    <div class = "room-description">Aktualnie sala jest dostępna dla każdego kto nie ma pochodzenia wenezuelskiego i jest świetnym pływakiem</div>
                 </div>
-                <div class = "wrapper-room-description">
-                    <div class = "room-description">lorem  lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum</div>
-                </div>
-                <div class = "wrapper-room-status">
+                <div class = "table-wrapper wrapper-room-status">
                     <div class = "room-status">Dostępny</div>
+                    <div class = "room-status-icon">X</div>
+                    <div class = "room-order-button">Zarezerwuj</div>
+                </div>
+            </div>
+            <div class = "table-row">
+                <div class = "table-wrapper wrapper-room-id">
+                    <div class = "room-intable-id">2.</div>
+                </div>
+                <div class = "table-wrapper wrapper-room-location">
+                    <div class = "room-floor">1. Piętro</div>
+                    <div class = "room-id">109</div>
+                </div>
+                <div class = "table-wrapper wrapper-room-name">
+                    <div class = "room-name">Laboratory of Advanced Digestion</div>
+                    <div class = "room-description">Sala jest niedostępna, ponieważ P O T Ę Ż N Y doktor Pawlyta prowadzi wykłady dla programistów o szanghajskich ulicach.</div>
+                </div>
+                <div class = "table-wrapper wrapper-room-status">
+                    <div class = "room-status">Niedostępny</div>
                     <div class = "room-status-icon">X</div>
                     <div class = "room-order-button">Zarezerwuj</div>
                 </div>
@@ -124,4 +200,30 @@ div#room-container{
         </div>
     </div>
 </body>
+<script type="text/javascript">
+  function getShortText(text)
+  {
+    let visibletext = text.toString().slice(0,30);
+      if (text.length>30) visibletext+="...";
+      return visibletext;
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    const descs = document.querySelectorAll('.room-description');
+    [...descs].forEach((el)=>{
+      el.title = el.innerText.toString();
+      el.innerText = getShortText(el.innerText.toString());
+el.addEventListener('click',function(){
+        if (this.innerText.toString()==this.title.toString())
+        {
+          this.innerText = getShortText(this.title.toString());
+        }
+        else
+        {
+          this.innerText = this.title.toString();
+        }
+      });
+    });
+  });
+</script>
 </html>
