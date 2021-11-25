@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link href="{% static 'base.css' %}" rel="stylesheet">
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <div id="header">
+    <p><a href="{% url 'homepage' %}">Strona główna</a></p>
+    </div>
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
-<footer>
-    <p><a href="{% url 'homepage' %}">Strona główna</a>.</p>
-</footer>
 </html>

@@ -18,4 +18,6 @@
         <input type="hidden" name="next" value="{{next}}"/>
         <p><input type="submit" value="Zaloguj"></p>
     </form>
+    <p><a href="{% url 'account:password_reset' %}">Zapomniałeś hasła?</a></p>
+    <p>Nie masz jeszcze konta? <a href="{% url 'account:register' %}">Zarejestruj się</a></p>
 {% endblock %}
