@@ -1,0 +1,115 @@
+ul#navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  list-style: none;
+  background-color:blue;
+  align-items:stretch;
+}
+
+ul#navbar li {
+background-color:lightblue;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  text-align: center;
+  margin:0 3px 0 0;
+  border-radius:5px;
+  flex:1;
+}
+
+ul#navbar .navbaritem-profile{
+    flex-grow:3;
+}
+
+li a {
+  display: block;
+  padding: 8px;
+}
+
+img#polsl-logo{
+    max-width:200px;
+    max-height:200px;
+    display:inline;
+    vertical-align:middle;
+}
+
+div#room-container{
+    display:block;
+}
+
+#main-container{
+  margin: 20px;
+  padding: 10px;
+}
+
+.table-row {
+    display:flex;
+    flex-wrap:wrap;
+    align-items: stretch;
+    border:1px solid blue;
+    gap:15px;
+}
+
+.table-header{
+  background: gray;
+}
+
+.table-row > div.table-wrapper {
+    display:flex;
+    flex-basis: 400px;
+    max-width: 400px;
+}
+
+.table-row > div > div {
+    padding:5px;
+}
+
+.wrapper-room-id{
+
+}
+
+.wrapper-room-location{
+}
+
+.wrapper-room-location > div{
+  width: 50%;
+}
+
+.wrapper-room-name{
+
+}
+
+.wrapper-room-status{
+
+}
+
+.wrapper-room-name > div{
+  width: 50%;
+}
+
+.room-description{
+  font-style: italic;
+  cursor: pointer;
+}
+
+#website-title-header {
+    display:inline;
+    margin:0px 20px;
+    font-size:0px;
+}
+@media screen and (min-width:1200px){
+    #website-title-header{
+        font-size:30px;
+    }
+}
+
+@media screen and (max-width:500px){
+    .table-row > div.table-wrapper {
+    flex-direction: column;
+}
+}

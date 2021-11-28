@@ -5,7 +5,7 @@
 {% block mainpage %}
   <h1>
     <a href="{% url 'laboratoria:room_list' %}">
-      Instytut Fizyki
+      Lista Laboratoriów Instytutu Fizyki
     </a>
   </h1>
 {% endblock %}
@@ -14,6 +14,7 @@
     <h1>{{room.title}}</h1>
     <h3>Pietro: {{room.floor}}</h3>
     <h3>Pokój numer: {{room.room_number}}</h3>
+    <h3>Numer stanowiska: {{room.room_station}}</h3>
     <h2>
         {{room.description|linebreaks}}
     </h2>
