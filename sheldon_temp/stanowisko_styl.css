@@ -1,0 +1,89 @@
+.main-container{
+	display: flex;
+	flex-direction: column;
+}
+
+#room-information{
+	border: 2px solid lightblue;
+}
+
+#room-information > div{
+	padding: 3px;
+}
+
+#calendar-container{
+	width: 500px;
+}
+
+@media only screen and (max-width: 800px) {
+  #calendar-container{
+	width: 80vw;
+}
+}
+
+.select-input{
+	min-width: 120px;
+	min-height: 50px;
+	text-align: center;
+}
+
+#calendar-day-scheme
+{
+	display: grid;
+	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#calendar-day-scheme > div.scheme-row{
+	border: 1px solid black;
+	margin: 2px;
+	display: flex;
+	align-items: stretch;
+	padding: 3px;
+}
+
+.scheme-row-chosen{
+	background-color:purple;
+}
+
+div.scheme-cell{
+	padding: 2px;
+	justify-content: center;
+	background-color: green;
+	flex:5;
+	margin: 3px;
+	text-align: center;
+	justify-content: center;
+	font-family: 'Tahoma';
+	cursor: pointer;
+	font-size: 12px;
+	min-height: 30px;
+}
+
+div.scheme-cell-orange{
+	background-color: orange;
+}
+
+div.scheme-cell-red{
+	background-color: red;
+}
+
+div.scheme-cell-label{
+	background-color: inherit;
+	flex:1;
+	cursor: initial;
+}
+
+@media only screen and (max-width: 800px) {
+  #calendar-day-scheme{
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr;
+}
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 801px) {
+  #calendar-day-scheme{
+	grid-template-rows: 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
+}
+}
