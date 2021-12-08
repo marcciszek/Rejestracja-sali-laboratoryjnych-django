@@ -71,15 +71,19 @@ function printList(list)
 		daylist.forEach((el)=>timesarr.push(el.time));
 		const li = document.createElement('li');
 		li.innerText+=`${getDayString(list[i].date)}, godziny: `;
-		let start = timesarr[0];
-		let end = timesarr[0]+1;
-		let k = 1;
-		for (let i = 0 ; i < timesarr.length; i++)
+		let s = timesarr[0];
+		let e = timesarr[0]+1;
+		for (let b = 0 ; b < timesarr.length ; b++)
 		{
-			li.innerText += getlabel(timesarr[i],timesarr[i]+1)+',';
+			s = timesarr[b];
+			e = s+1;
+			while(timesarr.indexOf(e)!=-1)
+			{
+				e++;
+				b++;
+			}
+			li.innerText+=getlabel(s,e)+', ';
 		}
-		console.log(timesarr);
-		console.log("");
 		htmllist.appendChild(li);
 		i+=daylist.length;
 	}
