@@ -70,21 +70,25 @@ function printList(list)
 		const timesarr = [];
 		daylist.forEach((el)=>timesarr.push(el.time));
 		const li = document.createElement('li');
-		li.innerText+=`${getDayString(list[i].date)}, godziny: `;
-		let s = timesarr[0];
-		let e = timesarr[0]+1;
-		for (let b = 0 ; b < timesarr.length ; b++)
+		li.innerText+=`${getDayString(list[i].date)}, `;
+		if (timesarr.length<24) 
 		{
-			s = timesarr[b];
-			e = s+1;
-			while(timesarr.indexOf(e)!=-1)
+			li.innerText+='godziny: ';
+			let s = timesarr[0];
+			let e = timesarr[0]+1;
+			for (let b = 0 ; b < timesarr.length ; b++)
 			{
-				e++;
-				b++;
+				s = timesarr[b];
+				e = s+1;
+				while(timesarr.indexOf(e)!=-1)
+				{
+					e++;
+					b++;
+				}
+				li.innerText+=getlabel(s,e)+', ';
 			}
-			li.innerText+=getlabel(s,e)+', ';
 		}
-		
+		else li.innerText+= ' (cały dzień)';
 		htmllist.appendChild(li);
 		i+=daylist.length;
 	}
