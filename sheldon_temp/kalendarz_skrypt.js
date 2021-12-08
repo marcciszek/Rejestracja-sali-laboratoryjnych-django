@@ -84,6 +84,7 @@ function printList(list)
 			}
 			li.innerText+=getlabel(s,e)+', ';
 		}
+		
 		htmllist.appendChild(li);
 		i+=daylist.length;
 	}
