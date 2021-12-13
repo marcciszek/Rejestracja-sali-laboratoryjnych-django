@@ -34,10 +34,33 @@
 }
 
 .calendar-cell-active:hover{
-	border: 2px solid green;
+	border: 2px solid navy;
 }
 
 .calendar-cell-inactive
 {
 	background: gray;
+}
+
+.calendar-cell-current
+{
+	background: lightblue;
+}
+
+.calendar-cell-chosen
+{
+	background: purple;
+}
+
+.calendar-cell-
+
+button.scheme-cell-choosebtn{
+	border: 0px;
+	background-color: inherit;
+}
+
+button#month-next-btn,button#month-prev-btn{
+	min-width: 40px;
+	min-height: 40px;
+	text-align: center;
 }

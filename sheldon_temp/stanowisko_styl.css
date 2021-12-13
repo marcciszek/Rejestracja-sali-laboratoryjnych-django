@@ -35,11 +35,11 @@
 }
 
 #calendar-day-scheme > div.scheme-row{
-	border: 1px solid black;
-	margin: 2px;
+	border: 1px solid black; 
+
 	display: flex;
 	align-items: stretch;
-	padding: 3px;
+	padding: 1px;
 }
 
 .scheme-row-chosen{
@@ -47,9 +47,11 @@
 }
 
 div.scheme-cell{
+	display: flex;
+	align-items: center;
 	padding: 2px;
 	justify-content: center;
-	background-color: green;
+	background-color: #fff;
 	flex:5;
 	margin: 3px;
 	text-align: center;
@@ -66,6 +68,10 @@ div.scheme-cell-orange{
 
 div.scheme-cell-red{
 	background-color: red;
+}
+
+div.scheme-cell-green{
+	background-color: green;
 }
 
 div.scheme-cell-label{

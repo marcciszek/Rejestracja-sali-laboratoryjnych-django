@@ -110,31 +110,69 @@ function run()
 	const dayheader = document.getElementById('calendar-day-header');
 
 	generateCalendarCells(month_input.value,year_input.value);
-	let calendarCells = document.querySelectorAll('calendar-cell-active');
-
+	let calendarCells = document.querySelectorAll('.calendar-cell-active');
 	month_input.addEventListener('input',function()
 	{
 		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
 	});
 	year_input.addEventListener('input',function()
 	{
 		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
+	});
+
+	const nextbtn = document.getElementById('month-next-btn');
+	const prevbtn = document.getElementById('month-prev-btn');
+
+	nextbtn.addEventListener('click',function(e){
+		e.preventDefault();
+		let monthvalue = Number(month_input.value)+1;
+		if (monthvalue>=12)
+		{
+			month_input.value = 0;
+			year_input.value++;
+		}
+		else
+		{
+			month_input.value++;
+		}
+		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
+	});
+
+	prevbtn.addEventListener('click',function(e){
+		e.preventDefault();
+		let monthvalue = Number(month_input.value)-1;
+		if (monthvalue<=0)
+		{
+			month_input.value = 11;
+			year_input.value--;
+		}
+		else
+		{
+			month_input.value--;
+		}
+		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
 	});
 
 	const now = new Date();
 	month_input.value = now.getMonth();
 	year_input.value = now.getFullYear();
-	//let currentDay = {year:now.getFullYear(),month:now.getMonth(),day:now.getDate()};
-	let currentDay = now;
+	let currentDay = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 	dayheader.innerText = getDayString(currentDay);
-
+	calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
 	const calview = document.getElementById('calendar-view');
 	calview.addEventListener('click',function(e){
 		if (e.target.classList.contains('calendar-cell-active'))
 		{
-			dayheader.innerText = getDayString(currentDay);
-			//currentDay = {year:year_input.value,month:month_input.value,day:Number(e.target.innerText)};
 			currentDay = new Date(year_input.value,month_input.value,Number(e.target.innerText));
+			dayheader.innerText = getDayString(currentDay);
+			[...document.getElementsByClassName('calendar-cell-current')].forEach((el)=>{
+				el.classList.remove('calendar-cell-current');
+			});
+			e.target.classList.add('calendar-cell-current');
 		}
 	});
 
