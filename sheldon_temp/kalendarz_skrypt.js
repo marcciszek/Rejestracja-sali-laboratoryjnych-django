@@ -9,11 +9,12 @@ function generateCalendarCells(month,year)
 	if (isLeapYear(year)) monthLengths[1] = 29;
 	const firstDay = new Date(year,month,1);
 	const firstWeekday = firstDay.getDay();
+
 	const calendarCells = [...document.querySelectorAll('.calendar-cell')];
-	let count = 0;
+	let cellCount = 0;
 	let dayCount = 1;
 	calendarCells.forEach((cell)=>{
-		if (count>=firstWeekday && count<firstWeekday+monthLengths[month])
+		if (cellCount>=firstWeekday && cellCount<firstWeekday+monthLengths[month])
 		{
 			cell.innerText = dayCount;
 			cell.classList.add('calendar-cell-active');
@@ -26,72 +27,99 @@ function generateCalendarCells(month,year)
 			cell.classList.add('calendar-cell-inactive');
 			cell.classList.remove('calendar-cell-active');
 		}
-		count++;
+		cellCount++;
 	});
 }
 
 function getDayString(date)
 {
-	var formatter = new Intl.DateTimeFormat( 'pl', {
+	var formatter = new Intl.DateTimeFormat('pl',{
 	day: 'numeric',
 	month: 'long',
 	year: 'numeric'
-} );
-const a = formatter.format( date );
-return a.toString();
-	//const monthnames_polish_case = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
-	//return d.toString()+' '+monthnames_polish_case[m]+' '+y.toString();
+	});
+const formatdate = formatter.format(date);
+return formatdate.toString();
 }
 
-function getlabel(i,r)
+function getTimeIntervalLabel(i,r)
 {
 	r = r%24;
 	return (i<=9?'0':'')+i.toString()+':00-'+(r<=9?'0':'')+(r).toString()+':00';
 }
 
-function printList(list)
+function insertTimeIntervalLabelsList(intervalsStringList)
 {
-	list.sort(function(a,b){
-		if (a.date<b.date) return -1;
-		if (b.date<a.date) return 1;
-
-		if (a.time<b.time) return -1;
-		if (b.time<a.time) return 1;
-		return 0;
-	});
 	const htmllist = document.getElementById('chosentimelist');
 	htmllist.textContent = '';
-	let i = 0;
-	while(i < list.length)
-	{
-		const daylist = list.filter((el)=>{
-			return el.date.getTime()==list[i].date.getTime();
-		});
-		const timesarr = [];
-		daylist.forEach((el)=>timesarr.push(el.time));
+	intervalsStringList.forEach((text)=>{
 		const li = document.createElement('li');
-		li.innerText+=`${getDayString(list[i].date)}, `;
-		if (timesarr.length<24) 
-		{
-			li.innerText+='godziny: ';
-			let s = timesarr[0];
-			let e = timesarr[0]+1;
-			for (let b = 0 ; b < timesarr.length ; b++)
-			{
-				s = timesarr[b];
-				e = s+1;
-				while(timesarr.indexOf(e)!=-1)
-				{
-					e++;
-					b++;
-				}
-				li.innerText+=getlabel(s,e)+', ';
-			}
-		}
-		else li.innerText+= ' (cały dzień)';
+		li.innerText = text;
 		htmllist.appendChild(li);
-		i+=daylist.length;
+	});
+}
+
+function generateIntervalLabels(timesarr)
+{
+	let labelString = "";
+	let s = timesarr[0];
+	let e = timesarr[0]+1;
+	for (let b = 0 ; b < timesarr.length ; b++)
+	{
+		s = timesarr[b];
+		e = s+1;
+		while(timesarr.indexOf(e)!=-1)
+		{
+			e++;
+			b++;
+		}
+		labelString+=getTimeIntervalLabel(s,e)+', ';
 	}
+	return labelString;
+}
+
+function generateIntervalString(intervalsListOfSingleDay)
+{
+	let intervalString = "";
+	const timesarr = [];
+	intervalsListOfSingleDay.forEach((el)=>timesarr.push(el.time));
+	intervalString+=`${getDayString(intervalsListOfSingleDay[0].date)}, `;
+	if (timesarr.length<24) 
+		{
+			intervalString+='godziny: ';
+			intervalString+=generateIntervalLabels(timesarr);
+		}
+	else
+		{
+			intervalString += ' (cały dzień)';
+		}
+	return intervalString;
+}
+
+function sortByDateAscending(a,b)
+{
+	if (a.date<b.date) return -1;
+	if (b.date<a.date) return 1;
+
+	if (a.time<b.time) return -1;
+	if (b.time<a.time) return 1;
+	return 0;
+}
+
+function getIntervalLabelsList(intervalsList)
+{
+	intervalsList.sort(sortByDateAscending);
+	let i = 0;
+	const intervalsStringList = [];
+	while(i < intervalsList.length)
+	{
+		const intervalsListOfSingleDay = intervalsList.filter((el)=>{
+			return el.date.getTime()==intervalsList[i].date.getTime();
+		});
+		intervalsStringList.push(generateIntervalString(intervalsListOfSingleDay));
+		i+=intervalsListOfSingleDay.length;
+	}
+	return intervalsStringList;
 }
 
 function indexOfList(list,obj)
@@ -103,68 +131,83 @@ function indexOfList(list,obj)
 	return -1;
 }
 
+function handleClick_prevMonthBtn(monthCurrent,yearCurrent)
+{
+	if (--monthCurrent<0)
+		{
+			monthCurrent = 11;
+			yearCurrent--;
+		}
+	return {month:monthCurrent,year:yearCurrent};
+}
+
+function handleClick_nextMonthBtn(monthCurrent,yearCurrent)
+{
+	if (++monthCurrent>=12)
+		{
+			monthCurrent = 0;
+			yearCurrent++;
+		}
+	return {month:monthCurrent,year:yearCurrent};
+}
+
+function getOrderAlertText(labelList,message)
+{
+	let alertText = "Potwierdź wysłanie zamówienia na tę salę w poniższych przedziałach czasowych:\r\n\r\n";
+	labelList.forEach((el)=>{
+		alertText+=`${el}\r\n`;
+	});
+	alertText+=`\r\nWiadomość: ${message}`;
+	return alertText;
+}
+
 function run()
 {
+	//REGION: Definitions
+
 	const month_input = document.getElementById('month-input');
 	const year_input = document.getElementById('year-input');
 	const dayheader = document.getElementById('calendar-day-header');
 
-	generateCalendarCells(month_input.value,year_input.value);
-	let calendarCells = document.querySelectorAll('.calendar-cell-active');
-	month_input.addEventListener('input',function()
-	{
-		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
-	});
-	year_input.addEventListener('input',function()
-	{
-		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
-	});
-
 	const nextbtn = document.getElementById('month-next-btn');
 	const prevbtn = document.getElementById('month-prev-btn');
 
-	nextbtn.addEventListener('click',function(e){
-		e.preventDefault();
-		let monthvalue = Number(month_input.value)+1;
-		if (monthvalue>=12)
-		{
-			month_input.value = 0;
-			year_input.value++;
-		}
-		else
-		{
-			month_input.value++;
-		}
-		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
-	});
-
-	prevbtn.addEventListener('click',function(e){
-		e.preventDefault();
-		let monthvalue = Number(month_input.value)-1;
-		if (monthvalue<=0)
-		{
-			month_input.value = 11;
-			year_input.value--;
-		}
-		else
-		{
-			month_input.value--;
-		}
-		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
-	});
-
-	const now = new Date();
-	month_input.value = now.getMonth();
-	year_input.value = now.getFullYear();
-	let currentDay = new Date(now.getFullYear(),now.getMonth(),now.getDate());
-	dayheader.innerText = getDayString(currentDay);
-	calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
 	const calview = document.getElementById('calendar-view');
-	calview.addEventListener('click',function(e){
+	const calscheme = document.getElementById('calendar-day-scheme');
+	const chosenlist = document.getElementById('chosentimelist');
+
+	const ordersendbtn = document.getElementById('order-send');
+	const orderMessageArea = document.getElementById('order-message');
+
+	generateCalendarCells(month_input.value,year_input.value);
+
+	let calendarCells = document.querySelectorAll('.calendar-cell-active');
+	let currentDay;
+	const chosentimelist = [];
+
+	//ENDREGION
+
+	//REGION: Closures
+	function handleMonthInput()
+	{
+		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
+	}
+
+	function handleSwitchingButtons(e,isNextBtnClicked)
+	{
+		e.preventDefault();
+		let newMonth;
+		if (isNextBtnClicked){newMonth = handleClick_nextMonthBtn(month_input.value,year_input.value);}
+		else {newMonth = handleClick_prevMonthBtn(month_input.value,year_input.value);}
+		month_input.value = newMonth.month;
+		year_input.value = newMonth.year;
+		generateCalendarCells(month_input.value,year_input.value);
+		calendarCells = document.querySelectorAll('.calendar-cell-active');
+	}
+
+	function handleCalendarCellClick(e)
+	{
 		if (e.target.classList.contains('calendar-cell-active'))
 		{
 			currentDay = new Date(year_input.value,month_input.value,Number(e.target.innerText));
@@ -174,12 +217,10 @@ function run()
 			});
 			e.target.classList.add('calendar-cell-current');
 		}
-	});
+	}
 
-	const calscheme = document.getElementById('calendar-day-scheme');
-	const chosenlist = document.getElementById('chosentimelist');
-	const chosentimelist = [];
-	calscheme.addEventListener('click',function(e){
+	function handleCalendarSchemeClick(e)
+	{
 		if (e.target.classList.contains('scheme-cell-choosebtn'))
 		{
 			const el = e.target.parentNode;
@@ -195,10 +236,53 @@ function run()
 				chosentimelist.push(timeobj);
 				el.classList.add('scheme-row-chosen');
 			}
-			printList(chosentimelist);
+			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 		}
+	}
+
+	function handleOrderSending(e)
+	{
+		e.preventDefault();
+		if (confirm(getOrderAlertText(getIntervalLabelsList(chosentimelist),orderMessageArea.value)))
+		{
+			alert("Wysłano zamówienie.");
+		}
+	}
+
+	function setCurrentDayValues()
+	{
+		const now = new Date();
+		month_input.value = now.getMonth();
+		year_input.value = now.getFullYear();
+
+		currentDay = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+		dayheader.innerText = getDayString(currentDay);
+		calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
+	}
+
+	//ENDREGION
+
+	//REGION: Event Listeners
+
+	month_input.addEventListener('input',handleMonthInput);
+	year_input.addEventListener('input',handleMonthInput);
+
+	nextbtn.addEventListener('click',function(e){
+		handleSwitchingButtons(e,true);
 	});
 
+	prevbtn.addEventListener('click',function(e){
+		handleSwitchingButtons(e,false);
+	});
+
+	calview.addEventListener('click',handleCalendarCellClick);
+	calscheme.addEventListener('click',handleCalendarSchemeClick);
+
+	ordersendbtn.addEventListener('click',handleOrderSending);
+
+	//ENDREGION
+
+	setCurrentDayValues();
 }
 
 document.addEventListener('DOMContentLoaded',run);
