@@ -1,0 +1,24 @@
+{% extends "laboratoria/base_lab.html" %}
+{% load static %}
+
+{% block title %}Lista testowa{% endblock %}
+{% block extra_head %}
+{% endblock %}
+
+{% block mainpage %}
+<h2>Lista testowa</h2>
+<h5>======================================================</h5>
+<h3>Rok z url: {{year}}</h3>
+<h3>Miesiac z url: {{month}}</h3>
+<h5>======================================================</h5>
+{% endblock %}
+
+{% block content %}
+
+        {% for day in days %}
+        <h4>Zapis z dnia: {{day.registerDate}}</h4>
+        <h4>{{ day.reserved }}</h4>
+        <h5>----------------------------------------------</h5>
+        {% endfor %}
+
+{% endblock %}
