@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from .models import Room, RegistrationEntry
 from django.contrib.auth.decorators import login_required
 
+from django.http import JsonResponse
+
+
 
 @login_required
 def room_list(request):
@@ -52,3 +55,37 @@ def day_detail(request, day):
     return render(request,
                   'laboratoria/reservation/day.html',
                   {'day': day})
+
+
+import logging, logging.config
+import sys
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO'
+    }
+}
+
+from django.http import HttpResponse
+
+def test(request):
+    if request.method == "POST":
+        logging.config.dictConfig(LOGGING)
+        logging.info('Ktoś chce moje dane!')
+        logging.info(request.body.decode('utf-8'))
+        response = JsonResponse({'foo': 'bar'})
+        return response
+    if request.method == "GET":
+        response = HttpResponse("{'foo':'bar'}", content_type="text/plain")
+        response.headers['Age'] = 120
+        return render(request,
+                      'laboratoria/room/stanowisko_export.html',
+                      {'rooms': 'aa'})

@@ -95,6 +95,7 @@ div#room-container{
 .room-description{
   font-style: italic;
   cursor: pointer;
+  word-wrap:anywhere;
 }
 
 #website-title-header {
