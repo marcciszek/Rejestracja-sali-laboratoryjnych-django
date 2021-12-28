@@ -4,7 +4,7 @@
 }
 
 #room-information{
-	border: 2px solid lightblue;
+
 }
 
 #room-information > div{
@@ -44,7 +44,7 @@
 
 div.scheme-row > div.scheme-cell-content{
 	display: flex;
-	flex-flow: row wrap;
+	color: #000;
 }
 
 div.scheme-row > div.scheme-cell-content a{
@@ -54,7 +54,8 @@ div.scheme-row > div.scheme-cell-content a{
 }
 
 .scheme-row-chosen{
-	background-color:purple;
+	background-color:navy;
+	color:#fff;
 }
 
 div.scheme-cell{
@@ -73,15 +74,15 @@ div.scheme-cell{
 }
 
 div.scheme-cell-orange{
-	background-color: orange;
+	background-color:   #f8d63e ;
 }
 
 div.scheme-cell-red{
-	background-color: red;
+	background-color:  #f93e3e ;
 }
 
 div.scheme-cell-green{
-	background-color: green;
+	background-color:   #32c569  ;
 }
 
 div.scheme-cell-label{

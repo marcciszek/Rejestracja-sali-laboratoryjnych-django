@@ -51,7 +51,14 @@ function getTimeIntervalLabel(i,r)
 function insertTimeIntervalLabelsList(intervalsStringList)
 {
 	const htmllist = document.getElementById('chosentimelist');
-	htmllist.textContent = '';
+    htmllist.textContent = '';
+    const alert = document.getElementById('nothing-chosen-alert');
+	if (intervalsStringList.length <= 0)
+	{
+	    alert.style.display = 'block';
+	    return;
+	}
+	alert.style.display = 'none';
 	intervalsStringList.forEach((text)=>{
 		const li = document.createElement('li');
 		li.innerText = text;
@@ -312,6 +319,7 @@ function run()
 	//ENDREGION
 
 	setCurrentDayValues();
+	insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 }
 
 document.addEventListener('DOMContentLoaded',run);
