@@ -1,70 +1,13 @@
+#content
+{
+    font-family:Tahoma,sans-serif;
+}
+
 #main-header{
  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items:stretch;
-}
-
-.navbar-logo{
-flex-grow:3;
-}
-
-.navbar-links
-{
-display:flex;
-align-items:stretch;
-align-items:center;
-}
-
-ul#navbar {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  padding: 10px;
-  list-style: none;
-  background-color:navy;
-  align-items:stretch;
-  color:white;
-  align-items:center;
-  font-size:1.1em;
-  font-family:Tahoma,sans-serif;
-}
-
-a{
-color:inherit;
-text-decoration:none;
-}
-
-ul#navbar li {
-background-color:inherit;
-  padding: 5px;
-  color: white;
-  font-weight: bold;
-  font-size: 1em;
-  text-align: center;
-  margin:0 3px 0 0;
-  border-radius:5px;
-  flex:1;
-}
-
-ul#navbar .navbaritem-profile{
-    flex-grow:3;
-}
-
-ul#navbar .navbaritem-profile{
-    flex-grow:3;
-}
-
-li a {
-  display: block;
-  padding: 8px;
-}
-
-img#polsl-logo{
-    max-width:200px;
-    max-height:200px;
-    display:inline;
-    vertical-align:middle;
 }
 
 div#room-container{
@@ -80,12 +23,18 @@ div#room-container{
     display:flex;
     flex-wrap:wrap;
     align-items: stretch;
-    border:1px solid blue;
+    border:1px solid navy;
+    font-size:1.2em;
     gap:15px;
 }
 
+.table-row:nth-of-type(2n){
+    background:#c1c1f3;
+}
+
 .table-header{
-  background: gray;
+  background: navy;
+  color:white;
 }
 
 .table-row > div.table-wrapper {
@@ -125,17 +74,6 @@ div#room-container{
   font-style: italic;
   cursor: pointer;
   word-wrap:anywhere;
-}
-
-#website-title-header {
-    display:inline;
-    margin:0px 20px;
-    font-size:20px;
-}
-@media screen and (min-width:1200px){
-    #website-title-header{
-        font-size:30px;
-    }
 }
 
 @media screen and (max-width:500px){

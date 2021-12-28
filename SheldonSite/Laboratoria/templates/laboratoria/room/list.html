@@ -5,6 +5,7 @@
 {% block extra_head %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="{% static 'lab_list.css' %}" rel="stylesheet">
+  <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet">
 <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 {% endblock %}
 
@@ -21,9 +22,11 @@
         </div>
         </a>
     </div>
-        <li class="navbaritem navbar-links"><a href="">Informacje</a>
-        <a href="">Kontakt</a>
-            <a href="">Profil</a></li>
+        <li class="navbaritem navbar-links">
+            <a class="navbarlink" href="">Informacje</a>
+            <a class="navbarlink" href="">Kontakt</a>
+            <a class="navbarlink" href="">Profil</a>
+        </li>
 </ul>
 
 <div id = "main-container">
@@ -73,5 +76,8 @@
 
     </div>
 </div>
+<footer>
+   © Politechnika Śląska
+</footer>
 <script src="{% static 'scripts/listing_script.js' %}" type="text/javascript"></script>
 {% endblock %}

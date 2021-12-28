@@ -1,7 +1,7 @@
   function getShortText(text)
   {
     let visibletext = text.toString().slice(0,30);
-      if (text.length>30) visibletext+="...";
+      if (text.length>20) visibletext+="[...]";
       return visibletext;
   }
 
