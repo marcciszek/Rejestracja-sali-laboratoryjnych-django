@@ -274,13 +274,15 @@ function run()
 		{
 			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
 			const data = { username: 'example' };
-			fetch("http://127.0.0.1:8000/laboratoria/test", {
+			const csrftoken = getCSRFToken();
+            const headers = new Headers();
+            headers.append('X-CSRFToken', csrftoken);
+			fetch("test", {
 			  method: 'POST',
-			  headers: {
-			    'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken(),
-			  },
-			  body: JSON.stringify(data),
+              body: JSON.stringify(data),
+              mode: 'same-origin',
+			  headers: headers,
+			  credentials: 'include'
 			})
 			.then(response => response.json())
 			.then(data => {
@@ -320,6 +322,8 @@ function run()
 
 	setCurrentDayValues();
 	insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
+
+
 }
 
 document.addEventListener('DOMContentLoaded',run);

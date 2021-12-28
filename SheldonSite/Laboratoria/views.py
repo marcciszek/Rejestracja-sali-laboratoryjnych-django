@@ -76,6 +76,12 @@ LOGGING = {
 
 from django.http import HttpResponse
 
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import requires_csrf_token
+from django.views.decorators.csrf import csrf_exempt
+
+@ensure_csrf_cookie
+@requires_csrf_token
 def test(request):
     if request.method == "POST":
         logging.config.dictConfig(LOGGING)

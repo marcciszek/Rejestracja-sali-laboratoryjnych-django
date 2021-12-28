@@ -184,7 +184,7 @@
 
 			</ol>
 			<textarea id = "order-message" placeholder="Zapisz dodatkową wiadomość do prośby o rezerwację."></textarea>
-			<button id = "order-send">Wyślij</button>
+			<form method="post">{% csrf_token %}<button id = "order-send">Wyślij</button></form>
 		</div>
 	</div>
 	<script type="text/javascript" src="{% static 'test/kalendarz_skrypt.js' %}"></script>
