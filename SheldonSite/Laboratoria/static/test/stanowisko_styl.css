@@ -67,7 +67,6 @@ div.scheme-cell{
 	margin: 3px;
 	text-align: center;
 	justify-content: center;
-	font-family: 'Tahoma';
 	cursor: pointer;
 	font-size: 12px;
 	min-height: 30px;
@@ -103,4 +102,8 @@ div.scheme-cell-label{
 	grid-template-rows: 1fr 1fr;
 	grid-template-columns: 1fr 1fr;
 }
+}
+
+a{
+color:blue;
 }

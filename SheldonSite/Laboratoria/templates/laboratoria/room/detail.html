@@ -1,21 +1,199 @@
 {% extends "laboratoria/base_lab.html" %}
-
+{% load static %}
 {% block title %}{{room.title}}{% endblock %}
-
+{% block extra_head %}
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <meta charset="utf-8" />
+    <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet"/>
+	<link rel = "stylesheet" type="text/css" href="{% static 'test/kalendarz_styl.css' %}">
+	<link rel = "stylesheet" type="text/css" href="{% static 'test/stanowisko_styl.css' %}">
+{% endblock %}
 {% block mainpage %}
+
+{% endblock %}
+
+{% block content %}
+<ul id = "navbar">
+    <div class="navbaritem navbar-logo" style="vertical-align: middle;">
+        <a href="{% url 'homepage' %}">
+        <div style="display:inline-block;">
+          <img id = "polsl-logo" src="{% static 'img/polsl_logo.png' %}" alt = "Politechnika Śląska" style="" />
+          <p id = "website-title-header" style="display:inline-block">System rezerwacji pracowni fizycznych</p>
+        </div>
+        </a>
+    </div>
+        <li class="navbaritem navbar-links">
+            <a class="navbarlink" href="">Informacje</a>
+            <a class="navbarlink" href="">Kontakt</a>
+            <a class="navbarlink" href="">Profil</a>
+        </li>
+</ul>
   <h1>
     <a href="{% url 'laboratoria:room_list' %}">
       Lista Laboratoriów Instytutu Fizyki
     </a>
   </h1>
+	<div id = "main-container">
+		<div id = "room-information">
+			<h2 id = "room-name">{{room.title}}</h2>
+			<div id = "room-floor">Piętro: {{room.floor}}</div>
+			<div id = "room-id">Numer pokoju: {{room.room_number}}</div>
+			<div id = "room-workbench-id">Numer stanowiska: {{room.room_station}} - &lt;nazwa stanowiska&gt;</div>
+			<div id = "room-description" style="font-style:italic;">
+				{{room.description|linebreaks}}
+			</div>
+		</div>
+        {% include 'laboratoria/calendar_container.html' %}
+        {% include 'laboratoria/calendar_day_details.html' %}
+        <!--
+		<div id = "calendar-day-details">
+			<h3 id = "calendar-day-header"></h3>
+			<div id = "calendar-day-scheme">
+				<div class="scheme-row" value="0">
+<div class="scheme-cell scheme-cell-label">00:00-01:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-green">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="1">
+<div class="scheme-cell scheme-cell-label">01:00-02:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="2">
+<div class="scheme-cell scheme-cell-label">02:00-03:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-red">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="3">
+<div class="scheme-cell scheme-cell-label">03:00-04:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="4">
+<div class="scheme-cell scheme-cell-label">04:00-05:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="5">
+<div class="scheme-cell scheme-cell-label">05:00-06:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="6">
+<div class="scheme-cell scheme-cell-label">06:00-07:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="7">
+<div class="scheme-cell scheme-cell-label">07:00-08:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwef qewfwfwewefwefqewfwfwewe fwefqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="8">
+<div class="scheme-cell scheme-cell-label">08:00-09:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-green">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="9">
+<div class="scheme-cell scheme-cell-label">09:00-10:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="10">
+<div class="scheme-cell scheme-cell-label">10:00-11:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">
+	<a>kamil123124312&nbsp;</a>
+	<a>adrian1&nbsp;</a>
+	<a>kubaguzik22&nbsp;</a>
+	<a>2mendakawon&nbsp;</a>
+</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="11">
+<div class="scheme-cell scheme-cell-label">11:00-12:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-red">kanal, fafea, fefwewfwb, rebebe,rberb,erberb, erberberb</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="12">
+<div class="scheme-cell scheme-cell-label">12:00-13:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="13">
+<div class="scheme-cell scheme-cell-label">13:00-14:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-red">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="14">
+<div class="scheme-cell scheme-cell-label">14:00-15:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-red">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="15">
+<div class="scheme-cell scheme-cell-label">15:00-16:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="16">
+<div class="scheme-cell scheme-cell-label">16:00-17:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="17">
+<div class="scheme-cell scheme-cell-label">17:00-18:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="18">
+<div class="scheme-cell scheme-cell-label">18:00-19:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="19">
+<div class="scheme-cell scheme-cell-label ">19:00-20:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-green">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="20">
+<div class="scheme-cell scheme-cell-label">20:00-21:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-orange">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="21">
+<div class="scheme-cell scheme-cell-label">21:00-22:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-red">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="22">
+<div class="scheme-cell scheme-cell-label">22:00-23:00</div>
+<div class="scheme-cell scheme-cell-content scheme-cell-green">fqewfwfwewefwe</div>
+<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+<div class="scheme-row" value="23">
+	<div class="scheme-cell scheme-cell-label">23:00-00:00</div>
+	<div class="scheme-cell scheme-cell-content scheme-cell-red">fqewfwfwewefwe</div>
+	<button class="scheme-cell scheme-cell-choosebtn">Wybierz</button>
+</div>
+			</div>
+		</div>
+		-->
+		<div id = "order-confirm">
+			<h4>Wybrano:</h4>
+			<ol id = "chosentimelist">
+
+			</ol>
+			<textarea id = "order-message" placeholder="Zapisz dodatkową wiadomość do prośby o rezerwację."></textarea>
+			<button id = "order-send">Wyślij</button>
+		</div>
+	</div>
+	<script type="text/javascript" src="{% static 'test/kalendarz_skrypt.js' %}"></script>
 {% endblock %}
 
-{% block content %}
-    <h1>{{room.title}}</h1>
+<!--
+ <h1>{{room.title}}</h1>
     <h3>Pietro: {{room.floor}}</h3>
     <h3>Pokój numer: {{room.room_number}}</h3>
     <h3>Numer stanowiska: {{room.room_station}}</h3>
     <h2>
         {{room.description|linebreaks}}
-    </h2>
-{% endblock %}
+    </h2> -->

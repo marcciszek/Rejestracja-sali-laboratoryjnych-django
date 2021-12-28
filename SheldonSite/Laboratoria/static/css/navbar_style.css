@@ -1,3 +1,8 @@
+body
+{
+    font-family:Tahoma,sans-serif;
+}
+
 li a {
   display: block;
   padding: 8px;
