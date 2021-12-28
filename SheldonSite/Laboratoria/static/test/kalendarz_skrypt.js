@@ -259,12 +259,29 @@ function run()
 			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 		}
 	}
-
+    /*
 	function getCSRFToken()
     {
       if (!document.cookie) return null;
-      const arr = document.cookie.split(';').map((c)=>{return c.split('=')}).flat();
+      const arr = document.cookie.split(';').map((c)=>{return c.split('=')}).map((c)=>{return c.trim()).flat();
       return arr[arr.indexOf("csrftoken")+1];
+    }
+    */
+    function getCookie(name)
+    {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 
 	function handleOrderSending(e)
@@ -274,9 +291,10 @@ function run()
 		{
 			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
 			const data = { username: 'example' };
-			const csrftoken = getCSRFToken();
+			const csrftoken = getCookie('csrftoken');
             const headers = new Headers();
             headers.append('X-CSRFToken', csrftoken);
+            //alert(document.querySelector('[name=csrfmiddlewaretoken]').value);
 			fetch("test", {
 			  method: 'POST',
               body: JSON.stringify(data),
