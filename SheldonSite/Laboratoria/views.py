@@ -2,6 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from .models import Room, RegistrationEntry
 from django.contrib.auth.decorators import login_required
 
+from django.http import HttpResponse, JsonResponse
+from django.core.serializers import serialize
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import requires_csrf_token
+
 
 @login_required
 def room_list(request):
@@ -11,39 +16,23 @@ def room_list(request):
                   {'rooms': rooms})
 
 
+@requires_csrf_token
+@ensure_csrf_cookie
 @login_required
 def room_detail(request, room):
-    room = get_object_or_404(Room, slug=room)
-    return render(request,
-                  'laboratoria/room/detail.html',
-                  {'room': room})
-
-
-@login_required
-def days_in_month(request, year, month):
-    if month > 12:
-        month = 12
-    if month < 0:
-        month = 0
-    if year < 2010:
-        year = 2010
-    days = RegistrationEntry.objects_custom.month_filter(year, month)
-    return render(request,
-                  'laboratoria/reservation/month.html',
-                  {'year': year,
-                   'month': month,
-                   'days': days})
-
-
-@login_required
-def days_in_year(request, year):
-    if year < 2010:
-        year = 2010
-    days = RegistrationEntry.objects_custom.year_filter(year)
-    return render(request,
-                  'laboratoria/reservation/year.html',
-                  {'year': year,
-                   'days': days})
+    # room = get_object_or_404(Room, slug=room)
+    # registers = RegistrationEntry.objects_custom.all_entries(room)
+    # return render(request,
+    #               'laboratoria/room/detail.html',
+    #               {'room': room})
+    if request.method == "GET":
+        room = get_object_or_404(Room, slug=room)
+        registers = RegistrationEntry.objects_custom.all_entries(room)
+        data = serialize("json", registers)
+        return JsonResponse({'data': data})
+        # return render(request,
+        #               'laboratoria/room/detail.html',
+        #               {'data': data})
 
 
 @login_required

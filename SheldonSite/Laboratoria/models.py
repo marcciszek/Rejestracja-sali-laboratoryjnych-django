@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from multiselectfield import MultiSelectField
 
@@ -65,6 +66,12 @@ class Room(models.Model):
 
 
 class CustomManager(models.Manager):
+    def all_entries(self, room):
+        return super(CustomManager, self).\
+            get_queryset()\
+            .filter(roomConnector=room)\
+            .order_by('registerDate')
+
     def month_filter(self, year, month):
         return super(CustomManager, self).\
             get_queryset()\
@@ -106,8 +113,12 @@ class RegistrationEntry(models.Model):
         Hour22 = 22, "22:00 - 23:00"
         Hour23 = 23, "23:00 - 00:00"
 
-    registerDate = models.DateField(unique_for_date='registerDate',
-                                    verbose_name="Data Rejestracji")
+    registerDate = models.DateField(verbose_name="Data Rejestracji")
+
+    roomConnector = models.ForeignKey(Room,
+                                      on_delete=models.CASCADE,
+                                      null=True,
+                                      verbose_name="Dotyczy")
 
     # help for queries
     year_copy = models.IntegerField(default=None, null=True)
@@ -125,6 +136,31 @@ class RegistrationEntry(models.Model):
                                max_length=100,
                                verbose_name="Oczekujące")
 
+    res_name_0 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn0', verbose_name="00:00 - 01:00")
+    res_name_1 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn1', verbose_name="01:00 - 02:00")
+    res_name_2 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn2', verbose_name="02:00 - 03:00")
+    res_name_3 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn3', verbose_name="03:00 - 04:00")
+    res_name_4 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn4', verbose_name="04:00 - 05:00")
+    res_name_5 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn5', verbose_name="05:00 - 06:00")
+    res_name_6 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn6', verbose_name="06:00 - 07:00")
+    res_name_7 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn7', verbose_name="07:00 - 08:00")
+    res_name_8 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn8', verbose_name="08:00 - 09:00")
+    res_name_9 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn9', verbose_name="09:00 - 10:00")
+    res_name_10 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn10', verbose_name="10:00 - 11:00")
+    res_name_11 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn11', verbose_name="11:00 - 12:00")
+    res_name_12 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn12', verbose_name="12:00 - 13:00")
+    res_name_13 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn13', verbose_name="13:00 - 14:00")
+    res_name_14 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn14', verbose_name="14:00 - 15:00")
+    res_name_15 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn15', verbose_name="15:00 - 16:00")
+    res_name_16 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn16', verbose_name="16:00 - 17:00")
+    res_name_17 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn17', verbose_name="17:00 - 18:00")
+    res_name_18 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn18', verbose_name="18:00 - 19:00")
+    res_name_19 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn19', verbose_name="19:00 - 20:00")
+    res_name_20 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn20', verbose_name="20:00 - 21:00")
+    res_name_21 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn21', verbose_name="21:00 - 22:00")
+    res_name_22 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn22', verbose_name="22:00 - 23:00")
+    res_name_23 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn23', verbose_name="23:00 - 00:00")
+
     def get_absolute_url(self):
         return reverse('laboratoria:day_detail',
                        args=[str(self.registerDate)])
@@ -136,7 +172,6 @@ class RegistrationEntry(models.Model):
 
     # dodac pole tekstu dla kazdej godziny (zarezerwowany i oczekujacy)
     # upewnic sie ze jest dodawane/usuwane
-    # dodac polaczenie z konkretna sala
 
     def __str__(self):
         return str(self.registerDate)
@@ -144,6 +179,7 @@ class RegistrationEntry(models.Model):
     class Meta:
         verbose_name = 'rezerwacja'
         verbose_name_plural = 'rezerwacje'
+        unique_together = ['registerDate', 'roomConnector']
 
     # default manager
     objects = models.Manager()

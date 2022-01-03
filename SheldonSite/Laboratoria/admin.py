@@ -12,5 +12,5 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(RegistrationEntry)
 class RegistrationEntryAdmin(admin.ModelAdmin):
-    list_display = ('registerDate', 'reserved',)
+    list_display = ('registerDate', 'roomConnector', 'reserved', 'pending')
     readonly_fields = ('year_copy', 'month_copy',)
