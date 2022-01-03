@@ -181,7 +181,7 @@ function getSchemeCellContent(userslist)
 function run()
 {
 	//REGION: Definitions
-
+    getRoomData()
 	const month_input = document.getElementById('month-input');
 	const year_input = document.getElementById('year-input');
 	const dayheader = document.getElementById('calendar-day-header');
@@ -311,6 +311,36 @@ function run()
 			  console.error('Error:', error);
 			});
 		}
+	}
+
+	function getSlug()
+	{
+	    const urlfragments = window.location.href.split('/');
+	    return urlfragments[urlfragments.length-1];
+	}
+
+	function getRoomData()
+	{
+        const data = { username: 'example' };
+			const csrftoken = getCookie('csrftoken');
+            const headers = new Headers();
+            const obj = { a: 'b' };
+            headers.append('X-CSRFToken', csrftoken);
+            //alert(document.querySelector('[name=csrfmiddlewaretoken]').value);
+			fetch("api/"+getSlug(), {
+			  method: 'GET',
+              mode: 'same-origin',
+			  headers: headers,
+			  credentials: 'include'
+			})
+			.then(response => response.json())
+			.then(data => {
+			  console.log('Success:', data);
+			  alert("Uzyskano dane.");
+			})
+			.catch((error) => {
+			  console.error('Error:', error);
+			});
 	}
 
 	function setCurrentDayValues()
