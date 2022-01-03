@@ -20,19 +20,28 @@ def room_list(request):
 @ensure_csrf_cookie
 @login_required
 def room_detail(request, room):
-    # room = get_object_or_404(Room, slug=room)
-    # registers = RegistrationEntry.objects_custom.all_entries(room)
-    # return render(request,
-    #               'laboratoria/room/detail.html',
-    #               {'room': room})
+    room = get_object_or_404(Room, slug=room)
+    return render(request,
+                  'laboratoria/room/detail.html',
+                  {'room': room})
+
+    # if request.method == "GET":
+    #     room = get_object_or_404(Room, slug=room)
+    #     registers = RegistrationEntry.objects_custom.all_entries(room)
+    #     data = serialize("json", registers)
+    #     return JsonResponse({'data': data})
+    #     return render(request,
+    #                   'laboratoria/room/detail.html',
+    #                   {'data': data})
+
+
+@login_required
+def room_detail_api(request, room):
     if request.method == "GET":
         room = get_object_or_404(Room, slug=room)
         registers = RegistrationEntry.objects_custom.all_entries(room)
         data = serialize("json", registers)
         return JsonResponse({'data': data})
-        # return render(request,
-        #               'laboratoria/room/detail.html',
-        #               {'data': data})
 
 
 @login_required
@@ -67,7 +76,8 @@ def days_in_year(request, year):
                   'laboratoria/reservation/year.html',
                   {'year': year,
                    'days': days})
-  
+
+
 import logging, logging.config
 import sys
 
@@ -85,11 +95,6 @@ LOGGING = {
     }
 }
 
-from django.http import HttpResponse
-
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import requires_csrf_token
-from django.views.decorators.csrf import csrf_exempt
 
 @ensure_csrf_cookie
 @requires_csrf_token
