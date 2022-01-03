@@ -113,19 +113,79 @@ function sortByDateAscending(a,b)
 	return 0;
 }
 
-function getIntervalLabelsList(intervalsList)
+function getCookie(name)
+    {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+function addZeroIfNeeded(number)
 {
-	intervalsList.sort(sortByDateAscending);
-	let i = 0;
-	const intervalsStringList = [];
-	while(i < intervalsList.length)
+    if (number<=9) return "0"+number.toString();
+    return number.toString();
+}
+
+function getSimpleDate(date)
+{
+const year = date.getUTCFullYear().toString();
+const month = addZeroIfNeeded(date.getUTCMonth() + 1);
+const day = addZeroIfNeeded(date.getUTCDate());
+return year+"-"+month+"-"+day;
+}
+
+function getIntervalsShippingObject(intervalsList)
+{
+    const list = [];
+    const dividedIntervalsList = getDividedIntervalsList(intervalsList);
+
+	dividedIntervalsList.forEach((el)=>{
+	    const obj = {}
+	    obj.date = getSimpleDate(el[0].date);
+	    const reservedIntervals = [];
+	    el.forEach((x)=>{
+	        reservedIntervals.push(x.time);
+	    });
+	    obj.intervals = reservedIntervals;
+	    list.push(obj);
+	});
+	return JSON.stringify(list);
+}
+
+function getDividedIntervalsList(intervalsList)
+{
+    intervalsList.sort(sortByDateAscending);
+    let i = 0;
+    const dividedIntervalsList = []
+    while(i < intervalsList.length)
 	{
 		const intervalsListOfSingleDay = intervalsList.filter((el)=>{
 			return el.date.getTime()==intervalsList[i].date.getTime();
 		});
-		intervalsStringList.push(generateIntervalString(intervalsListOfSingleDay));
+		dividedIntervalsList.push(intervalsListOfSingleDay);
 		i+=intervalsListOfSingleDay.length;
 	}
+	return dividedIntervalsList;
+}
+
+function getIntervalLabelsList(intervalsList)
+{
+	const intervalsStringList = [];
+	const dividedIntervalsList = getDividedIntervalsList(intervalsList);
+
+	dividedIntervalsList.forEach((el)=>{
+	    intervalsStringList.push(generateIntervalString(el));
+	});
 	return intervalsStringList;
 }
 
@@ -257,6 +317,8 @@ function run()
 				el.classList.add('scheme-row-chosen');
 			}
 			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
+			//console.log(getDividedIntervalsList(chosentimelist));
+			//console.log(JSON.parse(getIntervalsShippingObject(chosentimelist)));
 		}
 	}
     /*
@@ -267,22 +329,6 @@ function run()
       return arr[arr.indexOf("csrftoken")+1];
     }
     */
-    function getCookie(name)
-    {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
 	function handleOrderSending(e)
 	{
@@ -319,6 +365,13 @@ function run()
 	    return urlfragments[urlfragments.length-1];
 	}
 
+	var roomData;
+
+	function parseRoomData(data)
+	{
+
+	}
+
 	function getRoomData()
 	{
         const data = { username: 'example' };
@@ -336,6 +389,8 @@ function run()
 			.then(response => response.json())
 			.then(data => {
 			  console.log('Success:', data);
+			  const obj = JSON.parse(data);
+			  console.log(obj)
 			  alert("Uzyskano dane.");
 			})
 			.catch((error) => {
