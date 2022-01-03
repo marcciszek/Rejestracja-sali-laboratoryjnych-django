@@ -40,8 +40,8 @@ def room_detail_api(request, room):
     if request.method == "GET":
         room = get_object_or_404(Room, slug=room)
         registers = RegistrationEntry.objects_custom.all_entries(room)
-        data = serialize("json", registers)
-        return JsonResponse({'data': data})
+        data = serialize("json", registers, use_natural_foreign_keys=True)
+        return JsonResponse(data, safe=False)
 
 
 @login_required
@@ -50,6 +50,7 @@ def day_detail(request, day):
     return render(request,
                   'laboratoria/reservation/day.html',
                   {'day': day})
+
 
 @login_required
 def days_in_month(request, year, month):
