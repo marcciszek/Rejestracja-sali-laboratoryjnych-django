@@ -1,0 +1,18 @@
+{% extends "laboratoria/base_lab.html" %}
+
+{% block title %}{{day.registerDate}}{% endblock %}
+
+{% block mainpage %}
+  <h1>
+    <a href="{% url 'laboratoria:room_list' %}">
+      Lista Laboratoriów Instytutu Fizyki
+    </a>
+  </h1>
+{% endblock %}
+
+{% block content %}
+    <h3>Rezerwacje</h3>
+    <h4>{{day.reserved}}</h4>
+    <h3>Oczekujace</h3>
+    <h1>{{day.pending}}</h1>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Rejestracja sali{% endblock %}
+
+{% block content %}
+    <h1>Witaj na stronie głównej</h1>
+    {% if request.user.is_authenticated %}
+        <h3><a href="{% url 'laboratoria:room_list' %}">Laboratoria Instytutu Fizyki</a></h3>
+        <p>Jesteś zalogowany jako {{request.user.username}}</p>
+        <p><a href="{% url 'account:password_change' %}">Zmień hasło</a></p>
+        <a href="{% url 'account:logout' %}">
+            <button>Wyloguj</button>
+        </a>
+    {% else %}
+        <a href="{% url 'account:login' %}">
+            <button>Zaloguj</button>
+        </a>
+    {% endif %}
+{% endblock %}

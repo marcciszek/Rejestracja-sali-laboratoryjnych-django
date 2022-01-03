@@ -1,0 +1,23 @@
+{% extends "base_account.html" %}
+
+{% block title %}Logowanie{% endblock %}
+
+{% block content %}
+    <h1>Logowanie</h1>
+        {% if form.errors %}
+            <p>
+                Nazwa użytkownika lub hasło są nieprawidłowe.
+                Spróbuj ponownie.
+            </p>
+        {% else %}
+            <p>Wypełnij poniższy formularz, abys się zalogować:</p>
+        {% endif %}
+    <form action="{% url 'account:login' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{next}}"/>
+        <p><input type="submit" value="Zaloguj"></p>
+    </form>
+    <p><a href="{% url 'account:password_reset' %}">Zapomniałeś hasła?</a></p>
+    <p>Nie masz jeszcze konta? <a href="{% url 'account:register' %}">Zarejestruj się</a></p>
+{% endblock %}
