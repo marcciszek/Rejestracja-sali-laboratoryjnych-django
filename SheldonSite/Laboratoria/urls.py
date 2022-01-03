@@ -18,10 +18,4 @@ urlpatterns = [
     path('reservation/<slug:day>',
          views.day_detail,
          name='day_detail'),
-    path('reservation/<yyyy:year>/all',
-         views.days_in_year,
-         name='days_in_year'),
-    path('reservation/<yyyy:year>/<mm:month>',
-         views.days_in_month,
-         name='days_in_month'),
 ]
