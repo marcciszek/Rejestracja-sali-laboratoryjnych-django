@@ -1,52 +1,4 @@
-{% extends "laboratoria/base_lab.html" %}
-{% load static %}
-{% block title %}{{room.title}}{% endblock %}
-{% block extra_head %}
-	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	 <meta charset="utf-8" />
-    <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet"/>
-	<link rel = "stylesheet" type="text/css" href="{% static 'test/kalendarz_styl.css' %}">
-	<link rel = "stylesheet" type="text/css" href="{% static 'test/stanowisko_styl.css' %}">
-{% endblock %}
-{% block mainpage %}
-
-{% endblock %}
-
-{% block content %}
-<ul id = "navbar">
-    <div class="navbaritem navbar-logo" style="vertical-align: middle;">
-        <a href="{% url 'homepage' %}">
-        <div style="display:inline-block;">
-          <img id = "polsl-logo" src="{% static 'img/polsl_logo.png' %}" alt = "Politechnika Śląska" style="" />
-          <p id = "website-title-header" style="display:inline-block">System rezerwacji pracowni fizycznych</p>
-        </div>
-        </a>
-    </div>
-        <li class="navbaritem navbar-links">
-            <a class="navbarlink" href="">Informacje</a>
-            <a class="navbarlink" href="">Kontakt</a>
-            <a class="navbarlink" href="">Profil</a>
-        </li>
-</ul>
-  <h1>
-    <a href="{% url 'laboratoria:room_list' %}">
-      Lista Laboratoriów Instytutu Fizyki
-    </a>
-  </h1>
-	<div id = "main-container">
-		<div id = "room-information">
-			<h2 id = "room-name">{{room.title}}</h2>
-			<div id = "room-floor">Piętro: {{room.floor}}</div>
-			<div id = "room-id">Numer pokoju: {{room.room_number}}</div>
-			<div id = "room-workbench-id">Numer stanowiska: {{room.room_station}} - &lt;nazwa stanowiska&gt;</div>
-			<div id = "room-description" style="font-style:italic;">
-				{{room.description|linebreaks}}
-			</div>
-		</div>
-        {% include 'laboratoria/calendar_container.html' %}
-        {% include 'laboratoria/calendar_day_details.html' %}
-        <!--
-		<div id = "calendar-day-details">
+<div id = "calendar-day-details">
 			<h3 id = "calendar-day-header"></h3>
 			<div id = "calendar-day-scheme">
 				<div class="scheme-row" value="0">
@@ -176,25 +128,3 @@
 </div>
 			</div>
 		</div>
-		-->
-		<div id = "order-confirm">
-			<h4>Wybrano:</h4>
-            <span id = "nothing-chosen-alert" style="font-style:italic;">Nie wybrano niczego</span>
-			<ol id = "chosentimelist">
-
-			</ol>
-			<textarea id = "order-message" placeholder="Zapisz dodatkową wiadomość do prośby o rezerwację."></textarea>
-			<form method="post">{% csrf_token %}<button id = "order-send">Wyślij</button></form>
-		</div>
-	</div>
-	<script type="text/javascript" src="{% static 'test/kalendarz_skrypt.js' %}"></script>
-{% endblock %}
-
-<!--
- <h1>{{room.title}}</h1>
-    <h3>Pietro: {{room.floor}}</h3>
-    <h3>Pokój numer: {{room.room_number}}</h3>
-    <h3>Numer stanowiska: {{room.room_station}}</h3>
-    <h2>
-        {{room.description|linebreaks}}
-    </h2> -->

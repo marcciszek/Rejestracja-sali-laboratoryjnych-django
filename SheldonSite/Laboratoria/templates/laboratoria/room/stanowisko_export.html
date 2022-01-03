@@ -1,17 +1,12 @@
-{% extends "laboratoria/base_lab.html" %}
+
 {% load static %}
-{% block title %}{{room.title}}{% endblock %}
 {% block extra_head %}
-	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 	 <meta charset="utf-8" />
     <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet"/>
 	<link rel = "stylesheet" type="text/css" href="{% static 'test/kalendarz_styl.css' %}">
 	<link rel = "stylesheet" type="text/css" href="{% static 'test/stanowisko_styl.css' %}">
 {% endblock %}
-{% block mainpage %}
-
-{% endblock %}
-
 {% block content %}
 <ul id = "navbar">
     <div class="navbaritem navbar-logo" style="vertical-align: middle;">
@@ -28,26 +23,103 @@
             <a class="navbarlink" href="">Profil</a>
         </li>
 </ul>
-  <h1>
-    <a href="{% url 'laboratoria:room_list' %}">
-      Lista Laboratoriów Instytutu Fizyki
-    </a>
-  </h1>
 	<div id = "main-container">
 		<div id = "room-information">
-			<h2 id = "room-name">{{room.title}}</h2>
-			<div id = "room-floor">Piętro: {{room.floor}}</div>
-			<div id = "room-id">Numer pokoju: {{room.room_number}}</div>
-			<div id = "room-workbench-id">Numer stanowiska: {{room.room_station}} - &lt;nazwa stanowiska&gt;</div>
-			<div id = "room-description" style="font-style:italic;">
-				{{room.description|linebreaks}}
+			<div id = "room-name">Laboratorium Dextera</div>
+			<div id = "room-floor">Parter</div>
+			<div id = "room-id">312</div>
+			<div id = "room-workbench-id">1 - Stanowisko światła</div>
+			<div id = "room-description">
+				Jednocześnie wzmogły się prześladowania polskich organizacji niepodległościowych. W 1827 roku nastąpiły aresztowania członków Towarzystwa Patriotycznego. Sąd sejmowy, wydając łagodne wyroki na podejrzanych i oczyszczając ich z zarzutu zdrady stanu, pośrednio potwierdził, że występowali oni w dobrej wierze przywrócenia przestrzegania zapisów konstytucji 1815 roku.
 			</div>
 		</div>
-        {% include 'laboratoria/calendar_container.html' %}
-        {% include 'laboratoria/calendar_day_details.html' %}
-        <!--
+		<div id = "calendar-container">
+			<div id = "calendar">
+				<form id = "calendar-input">
+					<select id="month-input" class = "select-input">
+					  <option value="0">Styczeń</option>
+					  <option value="1">Luty</option>
+					  <option value="2">Marzec</option>
+					  <option value="3">Kwiecień</option>
+					  <option value="4">Maj</option>
+					  <option value="5">Czerwiec</option>
+					  <option value="6">Lipiec</option>
+					  <option value="7">Sierpień</option>
+					  <option value="8">Wrzesień</option>
+					  <option value="9">Październik</option>
+					  <option value="10">Listopad</option>
+					  <option value="11" selected>Grudzień</option>
+					</select>
+					<select id="year-input" class = "select-input">
+					  <option value="2021" selected>2021</option>
+					  <option value="2022">2022</option>
+					  <option value="2023">2023</option>
+					  <option value="2024">2024</option>
+					</select>
+					<button type="button" id = "month-prev-btn">&lt;&lt;</button>
+					<button type="button" id = "month-next-btn">&gt;&gt;</button>
+				</form>
+				<div id = "calendar-view">
+					<div class="calendar-cell-header">Nd</div>
+					<div class="calendar-cell-header">Po</div>
+					<div class="calendar-cell-header">Wt</div>
+					<div class="calendar-cell-header">Śr</div>
+					<div class="calendar-cell-header">Cz</div>
+					<div class="calendar-cell-header">Pt</div>
+					<div class="calendar-cell-header">So</div>
+
+					<div class = "calendar-cell">1</div>
+					<div class = "calendar-cell">2</div>
+					<div class = "calendar-cell">3</div>
+					<div class = "calendar-cell">4</div>
+					<div class = "calendar-cell">5</div>
+					<div class = "calendar-cell">6</div>
+					<div class = "calendar-cell">7</div>
+
+					<div class = "calendar-cell">8</div>
+					<div class = "calendar-cell">9</div>
+					<div class = "calendar-cell">10</div>
+					<div class = "calendar-cell">11</div>
+					<div class = "calendar-cell">12</div>
+					<div class = "calendar-cell">13</div>
+					<div class = "calendar-cell">14</div>
+
+					<div class = "calendar-cell">15</div>
+					<div class = "calendar-cell">16</div>
+					<div class = "calendar-cell">17</div>
+					<div class = "calendar-cell">18</div>
+					<div class = "calendar-cell">19</div>
+					<div class = "calendar-cell">20</div>
+					<div class = "calendar-cell">21</div>
+
+					<div class = "calendar-cell">22</div>
+					<div class = "calendar-cell">23</div>
+					<div class = "calendar-cell">24</div>
+					<div class = "calendar-cell">25</div>
+					<div class = "calendar-cell">26</div>
+					<div class = "calendar-cell">27</div>
+					<div class = "calendar-cell">28</div>
+
+					<div class = "calendar-cell">29</div>
+					<div class = "calendar-cell">30</div>
+					<div class = "calendar-cell">31</div>
+					<div class = "calendar-cell">32</div>
+					<div class = "calendar-cell">33</div>
+					<div class = "calendar-cell">34</div>
+					<div class = "calendar-cell">35</div>
+
+					<div class = "calendar-cell">36</div>
+					<div class = "calendar-cell">37</div>
+					<div class = "calendar-cell">38</div>
+					<div class = "calendar-cell">39</div>
+					<div class = "calendar-cell">40</div>
+					<div class = "calendar-cell">41</div>
+					<div class = "calendar-cell">42</div>
+				</div>
+			</div>
+		</div>
 		<div id = "calendar-day-details">
-			<h3 id = "calendar-day-header"></h3>
+			<h3 id = "calendar-day-header">23 marca 2022</h3>
 			<div id = "calendar-day-scheme">
 				<div class="scheme-row" value="0">
 <div class="scheme-cell scheme-cell-label">00:00-01:00</div>
@@ -176,25 +248,15 @@
 </div>
 			</div>
 		</div>
-		-->
 		<div id = "order-confirm">
 			<h4>Wybrano:</h4>
-            <span id = "nothing-chosen-alert" style="font-style:italic;">Nie wybrano niczego</span>
+			<span id = "nothing-chosen-alert" style="font-style:italic;">Nie wybrano niczego</span>
 			<ol id = "chosentimelist">
 
 			</ol>
 			<textarea id = "order-message" placeholder="Zapisz dodatkową wiadomość do prośby o rezerwację."></textarea>
-			<form method="post">{% csrf_token %}<button id = "order-send">Wyślij</button></form>
+			<button id = "order-send">Wyślij</button>
 		</div>
 	</div>
 	<script type="text/javascript" src="{% static 'test/kalendarz_skrypt.js' %}"></script>
 {% endblock %}
-
-<!--
- <h1>{{room.title}}</h1>
-    <h3>Pietro: {{room.floor}}</h3>
-    <h3>Pokój numer: {{room.room_number}}</h3>
-    <h3>Numer stanowiska: {{room.room_station}}</h3>
-    <h2>
-        {{room.description|linebreaks}}
-    </h2> -->

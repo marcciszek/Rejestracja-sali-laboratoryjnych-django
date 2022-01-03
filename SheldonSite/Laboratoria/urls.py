@@ -7,6 +7,9 @@ register_converter(converters.FourDigitYearConverter, 'yyyy')
 register_converter(converters.TwoDigitMonthConverter, 'mm')
 
 urlpatterns = [
+    path('test',
+         views.test,
+         name='test'),
     path('', views.room_list,
          name='room_list'),
     path('<slug:room>',

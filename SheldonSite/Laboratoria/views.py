@@ -41,3 +41,68 @@ def day_detail(request, day):
     return render(request,
                   'laboratoria/reservation/day.html',
                   {'day': day})
+
+@login_required
+def days_in_month(request, year, month):
+    if month > 12:
+        month = 12
+    if month < 0:
+        month = 0
+    if year < 2010:
+        year = 2010
+    days = RegistrationEntry.objects_custom.month_filter(year, month)
+    return render(request,
+                  'laboratoria/reservation/month.html',
+                  {'year': year,
+                   'month': month,
+                   'days': days})
+
+
+@login_required
+def days_in_year(request, year):
+    if year < 2010:
+        year = 2010
+    days = RegistrationEntry.objects_custom.year_filter(year)
+    return render(request,
+                  'laboratoria/reservation/year.html',
+                  {'year': year,
+                   'days': days})
+  
+import logging, logging.config
+import sys
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO'
+    }
+}
+
+from django.http import HttpResponse
+
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import requires_csrf_token
+from django.views.decorators.csrf import csrf_exempt
+
+@ensure_csrf_cookie
+@requires_csrf_token
+def test(request):
+    if request.method == "POST":
+        logging.config.dictConfig(LOGGING)
+        logging.info('Ktoś chce moje dane!')
+        logging.info(request.body.decode('utf-8'))
+        response = JsonResponse({'foo': 'bar'})
+        return response
+    if request.method == "GET":
+        response = HttpResponse("{'foo':'bar'}", content_type="text/plain")
+        response.headers['Age'] = 120
+        return render(request,
+                      'laboratoria/room/stanowisko_export.html',
+                      {'rooms': 'aa'})
