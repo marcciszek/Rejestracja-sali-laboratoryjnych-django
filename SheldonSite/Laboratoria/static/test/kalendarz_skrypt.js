@@ -144,11 +144,42 @@ const day = addZeroIfNeeded(date.getUTCDate());
 return year+"-"+month+"-"+day;
 }
 
+function getDepartmentList()
+{
+ //TODO - It should get it from the server. Now examplary list:
+ return ["Wydział górnictwa","Wydział automatyki elektroniki i informatyki","Komercyjny dostęp"];
+}
+
+function createDepartmentOption(value)
+{
+    const element = document.createElement('option');
+    element.innerText = value;
+    return element;
+}
+
+function createSelectDepartmentElement()
+{
+    const element = document.createElement('select');
+    element.id = "order-department";
+    const dataSource = getDepartmentList();
+    dataSource.forEach((el)=>element.appendChild(createDepartmentOption(el)));
+    return element;
+}
+
+function getOrderMessage()
+{
+    return document.getElementById('order-message').value.toString();
+}
+
+function getOrderDepartment()
+{
+    return document.getElementById('order-department').value.toString();
+}
+
 function getIntervalsShippingObject(intervalsList)
 {
     const list = [];
     const dividedIntervalsList = getDividedIntervalsList(intervalsList);
-
 	dividedIntervalsList.forEach((el)=>{
 	    const obj = {}
 	    obj.date = getSimpleDate(el[0].date);
@@ -159,7 +190,11 @@ function getIntervalsShippingObject(intervalsList)
 	    obj.intervals = reservedIntervals;
 	    list.push(obj);
 	});
-	return JSON.stringify(list);
+    const mainObj = {}
+    mainObj.message = getOrderMessage();
+	mainObj.list = list;
+	mainObj.department = getOrderDepartment();
+	return JSON.stringify(mainObj);
 }
 
 function getDividedIntervalsList(intervalsList)
@@ -318,7 +353,7 @@ function run()
 			}
 			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 			//console.log(getDividedIntervalsList(chosentimelist));
-			//console.log(JSON.parse(getIntervalsShippingObject(chosentimelist)));
+			console.log(JSON.parse(getIntervalsShippingObject(chosentimelist)));
 		}
 	}
     /*
@@ -336,14 +371,14 @@ function run()
 		if (confirm(getOrderAlertText(getIntervalLabelsList(chosentimelist),orderMessageArea.value)))
 		{
 			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
-			const data = { username: 'example' };
+			const data = getIntervalsShippingObject(chosentimelist);
 			const csrftoken = getCookie('csrftoken');
             const headers = new Headers();
             headers.append('X-CSRFToken', csrftoken);
             //alert(document.querySelector('[name=csrfmiddlewaretoken]').value);
 			fetch("test", {
 			  method: 'POST',
-              body: JSON.stringify(data),
+              body: data,
               mode: 'same-origin',
 			  headers: headers,
 			  credentials: 'include'
@@ -425,6 +460,8 @@ function run()
 
 	setCurrentDayValues();
 	insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
+
+    document.getElementById('order-department-section').appendChild(createSelectDepartmentElement());
 
 
 }
