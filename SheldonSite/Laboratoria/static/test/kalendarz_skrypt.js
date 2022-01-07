@@ -140,7 +140,7 @@ function getSimpleDate(date)
 {
 const year = date.getUTCFullYear().toString();
 const month = addZeroIfNeeded(date.getUTCMonth() + 1);
-const day = addZeroIfNeeded(date.getUTCDate());
+const day = addZeroIfNeeded(date.getDate());
 return year+"-"+month+"-"+day;
 }
 
@@ -176,7 +176,7 @@ function getOrderDepartment()
     return document.getElementById('order-department').value.toString();
 }
 
-function getIntervalsShippingObject(intervalsList)
+function getIntervals(intervalsList)
 {
     const list = [];
     const dividedIntervalsList = getDividedIntervalsList(intervalsList);
@@ -190,12 +190,18 @@ function getIntervalsShippingObject(intervalsList)
 	    obj.intervals = reservedIntervals;
 	    list.push(obj);
 	});
+	return list;
+}
+
+function getIntervalsShippingObject(intervalsList)
+{
     const mainObj = {}
     mainObj.message = getOrderMessage();
-	mainObj.list = list;
+	mainObj.list = getIntervals(intervalsList);
 	mainObj.department = getOrderDepartment();
 	return JSON.stringify(mainObj);
 }
+
 
 function getDividedIntervalsList(intervalsList)
 {
@@ -273,10 +279,17 @@ function getSchemeCellContent(userslist)
 	return aElementsList.join('');
 }
 
+function checkIfDatesSameDay(a,b)
+{
+    if (a.getDate()!=b.getDate()) return false;
+    if (a.getMonth()!=b.getMonth()) return false;
+    if (a.getFullYear()!=b.getFullYear()) return false;
+    return true;
+}
+
 function run()
 {
 	//REGION: Definitions
-    getRoomData()
 	const month_input = document.getElementById('month-input');
 	const year_input = document.getElementById('year-input');
 	const dayheader = document.getElementById('calendar-day-header');
@@ -292,9 +305,14 @@ function run()
 	const orderMessageArea = document.getElementById('order-message');
 
 	generateCalendarCells(month_input.value,year_input.value);
+    let calendarCells = document.querySelectorAll('.calendar-cell-active');
 
-	let calendarCells = document.querySelectorAll('.calendar-cell-active');
-	let currentDay;
+	//INSERT DATA
+    let currentDay;
+	setCurrentDayValues();
+    getRoomData()
+
+
 	const chosentimelist = [];
 
 	const calschemeCells = document.querySelectorAll('.scheme-row');
@@ -326,6 +344,8 @@ function run()
 		if (e.target.classList.contains('calendar-cell-active'))
 		{
 			currentDay = new Date(year_input.value,month_input.value,Number(e.target.innerText));
+            updateRoomData(roomData);
+            setChosenSchemeCells();
 			dayheader.innerText = getDayString(currentDay);
 			[...document.getElementsByClassName('calendar-cell-current')].forEach((el)=>{
 				el.classList.remove('calendar-cell-current');
@@ -334,25 +354,40 @@ function run()
 		}
 	}
 
+	function setSchemeRowChosen(row)
+	{
+	    row.className = 'scheme-row scheme-row-chosen';
+	}
+
+	function setSchemeRowNotChosen(row)
+	{
+        row.className = 'scheme-row';
+	}
+
 	function handleCalendarSchemeClick(e)
 	{
 		if (e.target.classList.contains('scheme-cell-choosebtn'))
 		{
 			const el = e.target.parentNode;
 			const timeobj = {date:currentDay,time:Number(el.getAttribute('value'))};
+			console.log("timeojb",timeobj);
 			const res = indexOfList(chosentimelist,timeobj);
 			if (res>-1)
 			{
 				chosentimelist.splice(res,1);
-				el.classList.remove('scheme-row-chosen');
+				//el.classList.remove('scheme-row-chosen');
+				setSchemeRowNotChosen(el);
 			}
 			else
 			{
 				chosentimelist.push(timeobj);
-				el.classList.add('scheme-row-chosen');
+				//el.classList.add('scheme-row-chosen');
+				setSchemeRowChosen(el);
 			}
 			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 			//console.log(getDividedIntervalsList(chosentimelist));
+			console.log(chosentimelist);
+			console.log(getIntervals(chosentimelist));
 			console.log(JSON.parse(getIntervalsShippingObject(chosentimelist)));
 		}
 	}
@@ -400,11 +435,82 @@ function run()
 	    return urlfragments[urlfragments.length-1];
 	}
 
-	var roomData;
+	let roomData;
 
 	function parseRoomData(data)
 	{
 
+	}
+
+	function getSchemeContentType(type)
+	{
+	    let classname = "scheme-cell scheme-cell-content";
+	    if (type=='red' || type=='green' || type=='orange')
+	    {
+	        return classname+' scheme-cell-'+type;
+	    }
+	    return classname;
+	}
+
+	function getCurrentDayObject(data)
+	{
+	    let element = null;
+	    data.forEach((el)=>{
+	        const date = new Date(el.fields.registerDate);
+	        if (checkIfDatesSameDay(date,currentDay))
+	        {
+	            element = el;
+	            return;
+	        }
+	    });
+	    return element;
+	}
+
+	function setDefaultScheme()
+	{
+	    const scheme = document.getElementById('calendar-day-scheme');
+	    const rows = document.getElementsByClassName('scheme-row');
+	    [...rows].forEach((x)=>{
+	        const content = x.querySelector('.scheme-cell-content');
+	        content.className = getSchemeContentType('green');
+	        content.innerHTML = "";
+	        content.insertAdjacentHTML('beforeend', getSchemeCellContent([]));
+	    });
+	}
+
+	function getRegisteredPeopleArray(data,id)
+	{
+	    if (!Number.isInteger(id)) return [];
+	    if (id<0 || id>23) return [];
+	    idString = parseInt(id).toString();
+	    return data.fields['res_name_'+idString];
+	}
+
+	function updateRoomData(data)
+	{
+        const currentDayData = getCurrentDayObject(data);
+        setDefaultScheme();
+        if (currentDayData == null) return;
+        const schemeRows = [...document.getElementsByClassName('scheme-row')];
+        const reserved = currentDayData.fields.reserved.split(',');
+        if (reserved[0]=="") return;
+        reserved.forEach((i)=>{
+            const interval = parseInt(i);
+            const content = schemeRows[interval].querySelector('.scheme-cell-content');
+            content.className = getSchemeContentType('red');
+            content.innerHTML = "";
+	        content.insertAdjacentHTML('beforeend', getSchemeCellContent(getRegisteredPeopleArray(currentDayData,interval)));
+        });
+        const pending = currentDayData.fields.pending.split(',');
+        if (pending[0]=="") return;
+        pending.forEach((i)=>{
+            const interval = parseInt(i);
+            const content = schemeRows[interval].querySelector('.scheme-cell-content');
+            content.className = getSchemeContentType('orange');
+            //TODO: handling pending usernames
+            //TODO: orange intervals different on conflicts (stripes)
+            content.innerHTML = "";
+        });
 	}
 
 	function getRoomData()
@@ -425,7 +531,9 @@ function run()
 			.then(data => {
 			  console.log('Success:', data);
 			  const obj = JSON.parse(data);
-			  console.log(obj)
+			  console.log(obj);
+			  roomData = obj;
+			  updateRoomData(roomData);
 			  alert("Uzyskano dane.");
 			})
 			.catch((error) => {
@@ -444,6 +552,28 @@ function run()
 		calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
 	}
 
+	function setChosenSchemeCells()
+    {
+        const intervals = getIntervals(chosentimelist);
+        const current = intervals.filter((el)=>{
+            const result = checkIfDatesSameDay(new Date(el.date),currentDay);
+            console.log(result);
+			return result;
+		});
+		        //console.log(intervals,current);
+		//if (current.length>0) console.log(current);
+		const schemeRows = [...document.getElementsByClassName('scheme-row')];
+		schemeRows.forEach((el)=>
+		{
+		    setSchemeRowNotChosen(el);
+		});
+		if (current==null || current==undefined || current.length<=0) return;
+		console.log(current);
+		current[0].intervals.forEach((i)=>{
+		    setSchemeRowChosen(schemeRows[i]);
+		});
+    }
+
 	//ENDREGION
 
 	//REGION: Event Listeners
@@ -458,7 +588,7 @@ function run()
 
 	//ENDREGION
 
-	setCurrentDayValues();
+
 	insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
 
     document.getElementById('order-department-section').appendChild(createSelectDepartmentElement());
