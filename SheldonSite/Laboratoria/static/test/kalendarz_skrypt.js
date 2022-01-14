@@ -9,6 +9,8 @@ function generateCalendarCells(month,year)
 	if (isLeapYear(year)) monthLengths[1] = 29;
 	const firstDay = new Date(year,month,1);
 	const firstWeekday = firstDay.getDay();
+	console.log("dzien tyg",firstWeekday);
+	console.log("dzien ",firstDay);
 
 	const calendarCells = [...document.querySelectorAll('.calendar-cell')];
 	let cellCount = 0;
@@ -272,7 +274,7 @@ function getOrderAlertText(labelList,message)
 function getSchemeCellContent(userslist)
 {
 	const aElementsList = [];
-	if (userslist.length<=0) return '<span style="font-style:italic;">Wolne</span>';
+	if (userslist == null || userslist.length<=0) return '<span style="font-style:italic;">Wolne</span>';
 	userslist.forEach((user)=>{
 		aElementsList.push(`<a href=/user/${user}>${user}</a>&nbsp;`);
 	});
@@ -304,12 +306,19 @@ function run()
 	const ordersendbtn = document.getElementById('order-send');
 	const orderMessageArea = document.getElementById('order-message');
 
-	generateCalendarCells(month_input.value,year_input.value);
+    let currentDay;
+    setCurrentDayValues();
+
+    generateCalendarCells(month_input.value,year_input.value);
     let calendarCells = document.querySelectorAll('.calendar-cell-active');
+    markCurrentDayOnCalendar(currentDay.getDate());
+
+
+
 
 	//INSERT DATA
-    let currentDay;
-	setCurrentDayValues();
+    //let currentDay;
+	//setCurrentDayValues();
     getRoomData()
 
 
@@ -324,7 +333,7 @@ function run()
 	function handleMonthInput()
 	{
 		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
+		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
 
 	function handleSwitchingButtons(e,isNextBtnClicked)
@@ -336,7 +345,7 @@ function run()
 		month_input.value = newMonth.month;
 		year_input.value = newMonth.year;
 		generateCalendarCells(month_input.value,year_input.value);
-		calendarCells = document.querySelectorAll('.calendar-cell-active');
+		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
 
 	function handleCalendarCellClick(e)
@@ -544,12 +553,24 @@ function run()
 	function setCurrentDayValues()
 	{
 		const now = new Date();
+		console.log('now',now);
 		month_input.value = now.getMonth();
 		year_input.value = now.getFullYear();
 
 		currentDay = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 		dayheader.innerText = getDayString(currentDay);
-		calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
+		//[...document.querySelectorAll('.calendar-cell-active')][currentDay.getDate()-1].classList.add('calendar-cell-current');
+		//calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
+	}
+
+	function markDayOnCalendar(day)
+	{
+	    try{
+	    [...document.querySelectorAll('.calendar-cell-active')][day-1].classList.add('calendar-cell-current');
+	    }
+	    catch{
+	    console.log("day out of bounds.")
+	    }
 	}
 
 	function setChosenSchemeCells()
