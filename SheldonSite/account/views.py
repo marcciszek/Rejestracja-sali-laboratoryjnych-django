@@ -19,3 +19,6 @@ def register(request):
     return render(request,
                   'registration/register.html',
                   {'user_form': user_form})
+
+def usertest(request):
+    return render(request,'userpage.html',{'foo':'bar'})

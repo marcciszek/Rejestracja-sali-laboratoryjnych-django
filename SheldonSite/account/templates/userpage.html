@@ -1,0 +1,30 @@
+{% load static %}
+<html>
+<head>
+   <link href="{% static 'userpage.css' %}" rel="stylesheet"/>
+   <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet" />
+   <link href="{% static 'css/userpage.css' %}" rel="stylesheet" />
+</head>
+{% include 'navbar.html' %}
+<div id = "content">
+<h2 id = "user-name">{Imię} {Nazwisko}</h2>
+<p id = "user-login">{login}</p>
+<div class="user-block" id = "user-contact">
+	<div id = "contact-email">
+		<span>e-mail&nbsp;</span>
+		<span id = "user-email-value">mail@mail.mail</span>
+	</div>
+	<div id = "contact-phone">
+		<span>phone&nbsp;</span>
+		<span id = "user-phone-value">21111111111</span>
+	</div>
+</div>
+<div class="user-block" id = "change-password">
+	<a id = "change-password-anchor" href = "zmien/haslo/website">Change password</a>
+</div>
+<div class="user-block" id = "user-status">
+	<span>Status:&nbsp;</span>
+	<span id = "user-status-type" class="user-type-something">niezweryfikowany</span>
+</div>
+</div>
+</html>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Contact{% endblock %}
+{% block extrahead%}<link rel = "stylesheet" href="{% static 'css/contact.css' %}" type="text/css"/> {% endblock %}
+{% block content %}
+{% include 'navbar.html' %}
+    <h1>Contact</h1>
+    <div id = "contacts">
+        <div class = "contact-block">
+            <h3 class= "contact-name">Jakub Marchewka</h3>
+            <p class = "contact-desc">Kierownik wydziału czegoś tam bla bla bla</p>
+            <p class = "contact-mail">jakub.march@polsl.pl</p>
+            <p class = "contact-phone">+48 123124141</p>
+        </div>
+        <div class = "contact-block">
+            <h3 class= "contact-name">Maciej Kozak</h3>
+            <p class = "contact-desc">Opiekun laboratoriów na parterze</p>
+            <p class = "contact-mail">maciej.kozak@polsl.pl</p>
+            <p class = "contact-phone">+48 9865642222</p>
+        </div>
+    </div>
+{% endblock %}
