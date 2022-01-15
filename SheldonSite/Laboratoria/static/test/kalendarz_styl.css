@@ -71,10 +71,32 @@ button#month-next-btn,button#month-prev-btn{
 	text-align: center;
 }
 
+.select-input{
+	min-width: 120px;
+	min-height: 50px;
+	text-align: center;
+}
+
+
 #calendar-input
 {
 display:flex;
 align-items:center;
 gap:20px;
 padding:5px;
+}
+
+@media only screen and (max-width: 600px) {
+  #calendar-input
+  {
+    gap:2px;
+    padding:initial;
+  }
+  .select-input{
+	max-width: 80px;
+	min-width:0px;
+	max-height: 50px;
+	text-align: center;
+}
+
 }

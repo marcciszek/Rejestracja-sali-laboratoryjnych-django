@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, get_object_or_404
 from .models import Room, RegistrationEntry
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,22 @@ from django.core.serializers import serialize
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import requires_csrf_token
 
+import logging, logging.config
+import sys
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO'
+    }
+}
 
 @login_required
 def room_list(request):
@@ -24,15 +42,20 @@ def room_detail(request, room):
     return render(request,
                   'laboratoria/room/detail.html',
                   {'room': room})
-
-    # if request.method == "GET":
-    #     room = get_object_or_404(Room, slug=room)
-    #     registers = RegistrationEntry.objects_custom.all_entries(room)
-    #     data = serialize("json", registers)
-    #     return JsonResponse({'data': data})
-    #     return render(request,
-    #                   'laboratoria/room/detail.html',
-    #                   {'data': data})
+# def room_detail_get_data(request, room):
+    # room = get_object_or_404(Room, slug=room)
+    # registers = RegistrationEntry.objects_custom.all_entries(room)
+    # return render(request,
+    #               'laboratoria/room/detail.html',
+    #               {'room': room})
+    #if request.method == "GET":
+     #   room = get_object_or_404(Room, slug=room)
+      #  registers = RegistrationEntry.objects_custom.all_entries(room)
+       # data = serialize("json", registers)
+       # return JsonResponse({'data': data})
+        # return render(request,
+        #               'laboratoria/room/detail.html',
+        #               {'data': data})
 
 
 @login_required
@@ -43,14 +66,12 @@ def room_detail_api(request, room):
         data = serialize("json", registers, use_natural_foreign_keys=True)
         return JsonResponse(data, safe=False)
 
-
 @login_required
 def day_detail(request, day):
     day = get_object_or_404(RegistrationEntry, registerDate=day)
     return render(request,
                   'laboratoria/reservation/day.html',
                   {'day': day})
-
 
 @login_required
 def days_in_month(request, year, month):
@@ -78,34 +99,50 @@ def days_in_year(request, year):
                   {'year': year,
                    'days': days})
 
+from datetime import datetime, date
 
-import logging, logging.config
-import sys
+from django.http import HttpResponse
 
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
-        }
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO'
-    }
-}
-
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import requires_csrf_token
+from django.views.decorators.csrf import csrf_exempt
 
 @ensure_csrf_cookie
 @requires_csrf_token
 def test(request):
     if request.method == "POST":
         logging.config.dictConfig(LOGGING)
-        logging.info('Ktoś chce moje dane!')
-        logging.info(request.body.decode('utf-8'))
-        response = JsonResponse({'foo': 'bar'})
-        return response
+        # response = JsonResponse({'foo': 'bar'})
+        response_data = {'foo': 'bar'}
+
+        data = json.loads(request.body)
+        logging.info(data)
+
+        username_r = str(request.user)
+        message = data['message']
+        date_now = date.today()
+        date_r = date.fromisoformat(data['list'][0]['date'])
+        intervals = data['list'][0]['intervals']
+        department = data['department']
+
+        logging.info("user       --> " + username_r)
+        logging.info("date now   --> " + str(date_now))
+        logging.info("date req   --> " + str(date_r))
+        logging.info("intervals  --> " + str(intervals))
+        logging.info("message    --> " + str(message))
+        logging.info("department --> " + department)
+
+        date_diff = (date_r-date_now).days
+        logging.info(date_diff)
+        if date_diff < 7:
+            response_data['error'] = 'minimum 7 days'
+            logging.info("Error: no 7 days minimum")
+            return JsonResponse(response_data)
+
+        logging.info("Everything seems ok")
+        response_data['error'] = 'none'
+        return JsonResponse(response_data)
+
     if request.method == "GET":
         response = HttpResponse("{'foo':'bar'}", content_type="text/plain")
         response.headers['Age'] = 120
