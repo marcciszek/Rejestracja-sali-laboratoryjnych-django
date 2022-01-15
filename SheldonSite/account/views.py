@@ -12,10 +12,13 @@ def register(request):
             new_user.save()
             profile = Profile.objects.create(user=new_user)
             return render(request,
-                          'reservation/register_done.html',
+                          'registration/register_done.html',
                           {'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
     return render(request,
-                  'reservation/register.html',
+                  'registration/register.html',
                   {'user_form': user_form})
+
+def usertest(request):
+    return render(request,'userpage.html',{'foo':'bar'})

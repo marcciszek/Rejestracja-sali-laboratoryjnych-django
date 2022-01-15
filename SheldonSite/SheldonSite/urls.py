@@ -20,6 +20,8 @@ from . import main_views
 
 urlpatterns = [
     path('', main_views.homepage, name='homepage'),
+    path('info',main_views.infopage,name='infopage'),
+    path('contact',main_views.contact,name='contact'),
     path('admin/', admin.site.urls),
     path('laboratoria/', include('Laboratoria.urls', namespace='laboratoria')),
     path('account/', include('account.urls', namespace='account')),

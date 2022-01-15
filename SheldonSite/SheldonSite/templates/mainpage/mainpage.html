@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block title %}Rejestracja sali{% endblock %}
-
 {% block content %}
+{% include 'navbar.html' %}
     <h1>Witaj na stronie głównej</h1>
     {% if request.user.is_authenticated %}
         <h3><a href="{% url 'laboratoria:room_list' %}">Laboratoria Instytutu Fizyki</a></h3>

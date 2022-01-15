@@ -1,0 +1,9 @@
+.contact-name{
+font-weight:bold;
+}
+
+.contact-block{
+border-bottom: 2px solid navy;
+padding: 0px 20px 0 20px;
+margin: 0 200px 0 0;
+}
