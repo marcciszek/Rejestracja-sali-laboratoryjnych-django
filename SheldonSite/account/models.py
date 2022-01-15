@@ -22,5 +22,9 @@ class Profile(models.Model):
                                     default=Rank.Niepotwierdzony,
                                     verbose_name="Ranga")
 
+    phone_number = models.CharField(max_length=12,
+                                    default='',
+                                    blank=True)
+
     def __str__(self):
         return ''

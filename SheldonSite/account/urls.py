@@ -43,5 +43,9 @@ urlpatterns = [
 
     path('usertest/',
          views.usertest,
-         name='usertest')
+         name='usertest'),
+
+    path('users/<str:username>/',
+         views.userprofile,
+         name='userprofile'),
 ]
