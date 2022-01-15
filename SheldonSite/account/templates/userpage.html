@@ -7,24 +7,24 @@
 </head>
 {% include 'navbar.html' %}
 <div id = "content">
-<h2 id = "user-name">{Imię} {Nazwisko}</h2>
-<p id = "user-login">{login}</p>
+<h2 id = "user-name">{{first_name}} {{last_name}}</h2>
+<p id = "user-login">{{name}}</p>
 <div class="user-block" id = "user-contact">
 	<div id = "contact-email">
 		<span>e-mail&nbsp;</span>
-		<span id = "user-email-value">mail@mail.mail</span>
+		<span id = "user-email-value">{{email}}</span>
 	</div>
 	<div id = "contact-phone">
 		<span>phone&nbsp;</span>
-		<span id = "user-phone-value">21111111111</span>
+		<span id = "user-phone-value">{{phone_number}}</span>
 	</div>
 </div>
 <div class="user-block" id = "change-password">
-	<a id = "change-password-anchor" href = "zmien/haslo/website">Change password</a>
+	<a id = "change-password-anchor" href="{% url 'account:password_reset' %}">Zmień hasło.</a>
 </div>
 <div class="user-block" id = "user-status">
 	<span>Status:&nbsp;</span>
-	<span id = "user-status-type" class="user-type-something">niezweryfikowany</span>
+	<span id = "user-status-type" class="user-type-something">{{rank}}</span>
 </div>
 </div>
 </html>
