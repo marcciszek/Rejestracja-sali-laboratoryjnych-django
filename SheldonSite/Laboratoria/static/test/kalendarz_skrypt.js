@@ -332,8 +332,8 @@ function run()
 	const chosentimelist = [];
 
 	const calschemeCells = document.querySelectorAll('.scheme-row');
-	calschemeCells[2].querySelector('.scheme-cell-content').insertAdjacentHTML('beforeend',getSchemeCellContent(["anna","maria","alek","gamon","fafefgwegw"]));
-	calschemeCells[3].querySelector('.scheme-cell-content').insertAdjacentHTML('beforeend',getSchemeCellContent([]));
+	//calschemeCells[2].querySelector('.scheme-cell-content').insertAdjacentHTML('beforeend',getSchemeCellContent(["anna","maria","alek","gamon","fafefgwegw"]));
+	//calschemeCells[3].querySelector('.scheme-cell-content').insertAdjacentHTML('beforeend',getSchemeCellContent([]));
 	//ENDREGION
 
 	//REGION: Closures
@@ -459,7 +459,7 @@ function run()
 	function getSchemeContentType(type)
 	{
 	    let classname = "scheme-cell scheme-cell-content";
-	    if (type=='red' || type=='green' || type=='orange')
+	    if (type=='red' || type=='green' || type=='orange' || type == 'gray')
 	    {
 	        return classname+' scheme-cell-'+type;
 	    }
@@ -500,31 +500,60 @@ function run()
 	    return data.fields['res_name_'+idString];
 	}
 
+	function clearDisabledOnButtons()
+	{
+	    const buttons = document.getElementById('calendar-day-details').getElementsByClassName('scheme-cell-choosebtn');
+	    console.log('buttons',buttons);
+	    [...buttons].forEach((el)=>{
+	        el.disabled = false;
+	    });
+	}
+
 	function updateRoomData(data)
 	{
         const currentDayData = getCurrentDayObject(data);
         setDefaultScheme();
         if (currentDayData == null) return;
         const schemeRows = [...document.getElementsByClassName('scheme-row')];
-        const reserved = currentDayData.fields.reserved.split(',');
-        if (reserved[0]=="") return;
-        reserved.forEach((i)=>{
-            const interval = parseInt(i);
-            const content = schemeRows[interval].querySelector('.scheme-cell-content');
-            content.className = getSchemeContentType('red');
-            content.innerHTML = "";
-	        content.insertAdjacentHTML('beforeend', getSchemeCellContent(getRegisteredPeopleArray(currentDayData,interval)));
-        });
-        const pending = currentDayData.fields.pending.split(',');
-        if (pending[0]=="") return;
-        pending.forEach((i)=>{
-            const interval = parseInt(i);
-            const content = schemeRows[interval].querySelector('.scheme-cell-content');
-            content.className = getSchemeContentType('orange');
-            //TODO: handling pending usernames
-            //TODO: orange intervals different on conflicts (stripes)
-            content.innerHTML = "";
-        });
+        const reservedbase = currentDayData.fields.reserved
+        if (reservedbase != null && reservedbase != undefined && reservedbase[0]!="" && reservedbase.length>0)
+        {
+            const reserved = reservedbase.split(',');
+            reserved.forEach((i)=>{
+                const interval = parseInt(i);
+                const content = schemeRows[interval].querySelector('.scheme-cell-content');
+                content.className = getSchemeContentType('red');
+                content.innerHTML = "";
+                content.insertAdjacentHTML('beforeend', getSchemeCellContent(getRegisteredPeopleArray(currentDayData,interval)));
+            });
+        }
+        const pendingbase = currentDayData.fields.pending
+        if (pendingbase != null && pendingbase != undefined && pendingbase[0]!="" && pendingbase.length>0)
+        {
+            const pending = pendingbase.split(',');
+            pending.forEach((i)=>{
+                const interval = parseInt(i);
+                const content = schemeRows[interval].querySelector('.scheme-cell-content');
+                content.className = getSchemeContentType('orange');
+                //TODO: handling pending usernames
+                //TODO: orange intervals different on conflicts (stripes)
+                content.innerHTML = "";
+            });
+        }
+        clearDisabledOnButtons();
+        const disabledbase = currentDayData.fields.disabled
+        if (disabledbase != null && disabledbase != undefined && disabledbase[0]!="" && disabledbase.length>0)
+        {
+            const disabled = disabledbase.split(',');
+            disabled.forEach((i)=>{
+                const interval = parseInt(i);
+                const content = schemeRows[interval].querySelector('.scheme-cell-content');
+                content.className = getSchemeContentType('gray');
+                const button = schemeRows[interval].querySelector('.scheme-cell-choosebtn');
+                button.disabled = true;
+            });
+        }
+        return;
 	}
 
 	function getRoomData()
