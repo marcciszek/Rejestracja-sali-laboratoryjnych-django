@@ -33,6 +33,12 @@ function generateCalendarCells(month,year)
 	});
 }
 
+function getSlug()
+{
+    const urlfragments = window.location.href.split('/');
+    return urlfragments[urlfragments.length-1];
+}
+
 function getDayString(date)
 {
 	var formatter = new Intl.DateTimeFormat('pl',{
@@ -201,6 +207,7 @@ function getIntervalsShippingObject(intervalsList)
     mainObj.message = getOrderMessage();
 	mainObj.list = getIntervals(intervalsList);
 	mainObj.department = getOrderDepartment();
+	mainObj.slug = getSlug();
 	return JSON.stringify(mainObj);
 }
 
@@ -333,8 +340,10 @@ function run()
 	function handleMonthInput()
 	{
 		generateCalendarCells(month_input.value,year_input.value);
+		markDayOnCalendarIfNeeded();
 		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
+
 
 	function handleSwitchingButtons(e,isNextBtnClicked)
 	{
@@ -345,6 +354,7 @@ function run()
 		month_input.value = newMonth.month;
 		year_input.value = newMonth.year;
 		generateCalendarCells(month_input.value,year_input.value);
+		markDayOnCalendarIfNeeded();
 		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
 
@@ -416,6 +426,8 @@ function run()
 		{
 			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
 			const data = getIntervalsShippingObject(chosentimelist);
+			data.slug = getSlug();
+			console.log(data);
 			const csrftoken = getCookie('csrftoken');
             const headers = new Headers();
             headers.append('X-CSRFToken', csrftoken);
@@ -436,12 +448,6 @@ function run()
 			  console.error('Error:', error);
 			});
 		}
-	}
-
-	function getSlug()
-	{
-	    const urlfragments = window.location.href.split('/');
-	    return urlfragments[urlfragments.length-1];
 	}
 
 	let roomData;
@@ -563,14 +569,50 @@ function run()
 		//calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
 	}
 
+    function clearCalendarCells()
+    {
+        const activecells = [...document.querySelectorAll('.calendar-cell')];
+        activecells.forEach((el)=>{
+            el.classList.remove('calendar-cell-current');
+        });
+    }
+
 	function markDayOnCalendar(day)
 	{
+	    const activecells = [...document.querySelectorAll('.calendar-cell-active')];
+	    if (activecells==null || activecells.length<28)
+	        {
+	            console.log("error with calendar cells",activecells);
+	            return;
+	        }
 	    try{
-	    [...document.querySelectorAll('.calendar-cell-active')][day-1].classList.add('calendar-cell-current');
-	    }
+	        clearCalendarCells();
+            dayId = day-1;
+            for (let i = 0 ; i < activecells.length ; i++)
+                {
+                    if (i==dayId)
+                    {
+                        console.log(day);
+                        activecells[i].classList.add('calendar-cell-current');
+                        break;
+                    }
+                }
+            }
 	    catch{
-	    console.log("day out of bounds.")
+            console.log("day out of bounds.");
+            return;
 	    }
+	}
+
+	function markDayOnCalendarIfNeeded()
+	{
+	    if (currentDay.getMonth() == month_input.value && currentDay.getFullYear() == year_input.value)
+	    {
+	        markDayOnCalendar(currentDay.getDate());
+	        return;
+	    }
+	    clearCalendarCells();
+	    return;
 	}
 
 	function setChosenSchemeCells()
