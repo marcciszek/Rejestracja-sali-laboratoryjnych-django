@@ -99,7 +99,7 @@ function generateIntervalString(intervalsListOfSingleDay)
 	const timesarr = [];
 	intervalsListOfSingleDay.forEach((el)=>timesarr.push(el.time));
 	intervalString+=`${getDayString(intervalsListOfSingleDay[0].date)}, `;
-	if (timesarr.length<24)
+	if (timesarr.length<24) 
 		{
 			intervalString+='godziny: ';
 			intervalString+=generateIntervalLabels(timesarr);
@@ -426,7 +426,6 @@ function run()
 		{
 			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
 			const data = getIntervalsShippingObject(chosentimelist);
-			data.slug = getSlug();
 			console.log(data);
 			const csrftoken = getCookie('csrftoken');
             const headers = new Headers();
@@ -660,3 +659,36 @@ function run()
 }
 
 document.addEventListener('DOMContentLoaded',run);
+
+/*
+var curWidth = document.documentElement.clientWidth;
+var curHeight = document.documentElement.clientHeight;
+function consoleCheck()
+{
+  var temp_curHeight = document.documentElement.clientHeight;
+  var temp_curWidth = document.documentElement.clientWidth;
+
+  if(curHeight != temp_curHeight || curWidth != temp_curWidth)
+  {
+    var devtools = function() {};
+    devtools.toString = function() {
+    if (!this.opened) {
+      $('body').remove();
+    }
+    this.opened = true;
+    }
+    console.log('YOU CANNOT HACK THIS SITE');
+    console.log('%c', devtools);
+  }
+  else{
+    location.reload();
+  }
+}
+
+$(window).resize(function () {
+  consoleCheck()
+});
+$( window ).on( "orientationchange", function( ) {
+  consoleCheck()
+});
+*/

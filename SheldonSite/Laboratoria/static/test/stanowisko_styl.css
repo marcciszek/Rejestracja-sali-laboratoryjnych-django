@@ -21,12 +21,6 @@
 }
 }
 
-.select-input{
-	min-width: 120px;
-	min-height: 50px;
-	text-align: center;
-}
-
 #calendar-day-scheme
 {
 	display: grid;
