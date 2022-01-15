@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, get_object_or_404
 from .models import Room, RegistrationEntry
 from django.contrib.auth.decorators import login_required
@@ -96,8 +98,8 @@ def days_in_year(request, year):
                   'laboratoria/reservation/year.html',
                   {'year': year,
                    'days': days})
-  
 
+from datetime import datetime, date
 
 from django.http import HttpResponse
 
@@ -110,10 +112,37 @@ from django.views.decorators.csrf import csrf_exempt
 def test(request):
     if request.method == "POST":
         logging.config.dictConfig(LOGGING)
-        logging.info('Ktoś chce moje dane!')
-        logging.info(request.body.decode('utf-8'))
-        response = JsonResponse({'foo': 'bar'})
-        return response
+        # response = JsonResponse({'foo': 'bar'})
+        response_data = {'foo': 'bar'}
+
+        data = json.loads(request.body)
+        logging.info(data)
+
+        username_r = str(request.user)
+        message = data['message']
+        date_now = date.today()
+        date_r = date.fromisoformat(data['list'][0]['date'])
+        intervals = data['list'][0]['intervals']
+        department = data['department']
+
+        logging.info("user       --> " + username_r)
+        logging.info("date now   --> " + str(date_now))
+        logging.info("date req   --> " + str(date_r))
+        logging.info("intervals  --> " + str(intervals))
+        logging.info("message    --> " + str(message))
+        logging.info("department --> " + department)
+
+        date_diff = (date_r-date_now).days
+        logging.info(date_diff)
+        if date_diff < 7:
+            response_data['error'] = 'minimum 7 days'
+            logging.info("Error: no 7 days minimum")
+            return JsonResponse(response_data)
+
+        logging.info("Everything seems ok")
+        response_data['error'] = 'none'
+        return JsonResponse(response_data)
+
     if request.method == "GET":
         response = HttpResponse("{'foo':'bar'}", content_type="text/plain")
         response.headers['Age'] = 120
