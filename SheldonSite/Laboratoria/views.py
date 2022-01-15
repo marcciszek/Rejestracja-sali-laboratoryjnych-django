@@ -207,6 +207,7 @@ def test(request):
                 if _ == 23:
                     reservation_exist.update(res_name_23=username_r)
             reserved_new.sort()
+            logging.info(type(reserved_new))
             reservation_exist.update(reserved=reserved_new)
             logging.info(list(reservation_exist[0].reserved))
         else:
