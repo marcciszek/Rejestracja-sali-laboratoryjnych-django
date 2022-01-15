@@ -13,21 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<ul id = "navbar">
-    <div class="navbaritem navbar-logo" style="vertical-align: middle;">
-        <a href="{% url 'homepage' %}">
-        <div style="display:inline-block;">
-          <img id = "polsl-logo" src="{% static 'img/polsl_logo.png' %}" alt = "Politechnika Śląska" style="" />
-          <p id = "website-title-header" style="display:inline-block">System rezerwacji pracowni fizycznych</p>
-        </div>
-        </a>
-    </div>
-        <li class="navbaritem navbar-links">
-            <a class="navbarlink" href="">Informacje</a>
-            <a class="navbarlink" href="">Kontakt</a>
-            <a class="navbarlink" href="">Profil</a>
-        </li>
-</ul>
+{% include 'navbar.html' %}
 
 <div id = "main-container">
     <div id = "room-container" style="display:grid;">

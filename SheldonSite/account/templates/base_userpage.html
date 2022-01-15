@@ -4,18 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-      <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet"/>
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link href="{% static 'css/navbar_style.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/userpage.css' %}" rel="stylesheet"/>
     {% block extra_head %}{% endblock %}
 
 </head>
 <body>
-        {% block mainpage %}
-        {% endblock %}
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    </div>
+
+<div id = "user-logout"></div>
 </body>
 <!--<footer>-->
 <!--    <a href="{% url 'account:logout' %}">-->
