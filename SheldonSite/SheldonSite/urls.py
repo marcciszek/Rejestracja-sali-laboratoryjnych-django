@@ -26,5 +26,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('laboratoria/', include('Laboratoria.urls', namespace='laboratoria')),
     path('account/', include('account.urls', namespace='account')),
-    path('', lambda request: redirect('laboratoria/', permanent=True)),
 ]
