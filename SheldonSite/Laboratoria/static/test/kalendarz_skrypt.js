@@ -276,7 +276,7 @@ function getSchemeCellContent(userslist)
 	const aElementsList = [];
 	if (userslist == null || userslist.length<=0) return '<span style="font-style:italic;">Wolne</span>';
 	userslist.forEach((user)=>{
-		aElementsList.push(`<a href=/user/${user}>${user}</a>&nbsp;`);
+		aElementsList.push(`<a href=/account/${user}>${user}</a>&nbsp;`);
 	});
 	return aElementsList.join('');
 }
@@ -311,7 +311,7 @@ function run()
 
     generateCalendarCells(month_input.value,year_input.value);
     let calendarCells = document.querySelectorAll('.calendar-cell-active');
-    markCurrentDayOnCalendar(currentDay.getDate());
+    markDayOnCalendar(currentDay.getDate());
 
 
 
