@@ -12,6 +12,11 @@ class AvailableManager(models.Manager):
             get_queryset()\
             .filter(status='available')
 
+    def get_room_from_slug(self, slug):
+        return super(AvailableManager, self).\
+            get_queryset()\
+            .filter(slug=slug)
+
 
 class Room(models.Model):
     class Floor(models.IntegerChoices):
@@ -72,10 +77,16 @@ class CustomManager(models.Manager):
             .filter(roomConnector=room)\
             .order_by('registerDate')
 
+    def day_filter(self, date_iso, room):
+        return super(CustomManager, self).\
+            get_queryset()\
+            .filter(roomConnector=room, registerDate=date_iso)
+
     def month_filter(self, year, month):
         return super(CustomManager, self).\
             get_queryset()\
-            .filter(year_copy=year, month_copy=month)\
+            .filter(year_copy=year,
+                    month_copy=month)\
             .order_by('registerDate')
 
     def year_filter(self, year):
