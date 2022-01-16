@@ -7,14 +7,14 @@ register_converter(converters.FourDigitYearConverter, 'yyyy')
 register_converter(converters.TwoDigitMonthConverter, 'mm')
 
 urlpatterns = [
-    path('test',
-         views.test,
-         name='test'),
     path('', views.room_list,
          name='room_list'),
     path('<slug:room>',
          views.room_detail,
          name='room_detail'),
+    path('api/order_submit',
+         views.order_submit,
+         name='order_submit_api'),
     path('api/<slug:room>',
          views.room_detail_api,
          name='room_detail_api'),
