@@ -12,7 +12,7 @@
             <a class="navbarlink" href="/info">Informacje</a>
             <a class="navbarlink" href="/contact">Kontakt</a>
             {% if user.is_authenticated %}
-            <a class="navbarlink" href="/account/{{user.get_username}}">Profil</a>
+            <a class="navbarlink" href="/account/users/{{user.get_username}}">Profil</a>
             {% else %}
             <a class="navbarlink" href="/account/login">Profil</a>
             {% endif %}

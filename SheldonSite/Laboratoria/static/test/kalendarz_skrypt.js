@@ -283,7 +283,7 @@ function getSchemeCellContent(userslist)
 	const aElementsList = [];
 	if (userslist == null || userslist.length<=0) return '<span style="font-style:italic;">Wolne</span>';
 	userslist.forEach((user)=>{
-		aElementsList.push(`<a href=/account/${user}>${user}</a>&nbsp;`);
+		aElementsList.push(`<a href=/account/users/${user}>${user}</a>&nbsp;`);
 	});
 	return aElementsList.join('');
 }
