@@ -290,6 +290,7 @@ function handleClick_prevMonthBtn(monthCurrent,yearCurrent)
 			monthCurrent = 11;
 			yearCurrent--;
 		}
+    if (checkMaxYearExceeded(yearCurrent)) return null;
 	return {month:monthCurrent,year:yearCurrent};
 }
 
@@ -300,6 +301,7 @@ function handleClick_nextMonthBtn(monthCurrent,yearCurrent)
 			monthCurrent = 0;
 			yearCurrent++;
 		}
+	if (checkMaxYearExceeded(yearCurrent)) return null;
 	return {month:monthCurrent,year:yearCurrent};
 }
 
@@ -329,6 +331,13 @@ function checkIfDatesSameDay(a,b)
     if (a.getMonth()!=b.getMonth()) return false;
     if (a.getFullYear()!=b.getFullYear()) return false;
     return true;
+}
+
+function checkMaxYearExceeded(year)
+{
+    if (year>2024) return true;
+    if (year<2021) return true;
+    return false;
 }
 
 function run()
@@ -387,8 +396,10 @@ function run()
 		let newMonth;
 		if (isNextBtnClicked){newMonth = handleClick_nextMonthBtn(month_input.value,year_input.value);}
 		else {newMonth = handleClick_prevMonthBtn(month_input.value,year_input.value);}
+		if (newMonth == null) return;
 		month_input.value = newMonth.month;
 		year_input.value = newMonth.year;
+
 		generateCalendarCells(month_input.value,year_input.value);
 		colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 		markDayOnCalendarIfNeeded();
