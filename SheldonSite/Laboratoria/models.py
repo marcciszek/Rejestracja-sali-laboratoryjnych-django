@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from multiselectfield import MultiSelectField
 
@@ -27,9 +28,9 @@ class Room(models.Model):
                                 default=0,
                                 verbose_name="Piętro")
 
-    room_number = models.PositiveIntegerField(verbose_name="Numer pokoju")
+    room_number = models.PositiveIntegerField(verbose_name="Numer pokoju", validators=[MinValueValidator(1), MaxValueValidator(100_000)])
     room_station = models.PositiveIntegerField(default=1,
-                                               verbose_name="Numer stanowiska")
+                                               verbose_name="Numer stanowiska", validators=[MinValueValidator(1), MaxValueValidator(100_000)])
     title = models.CharField(max_length=50,
                              verbose_name="Nazwa pokoju")
     description = models.TextField(verbose_name="Opis")

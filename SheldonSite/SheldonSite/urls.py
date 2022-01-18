@@ -19,7 +19,6 @@ from django.shortcuts import redirect
 from . import main_views
 
 urlpatterns = [
-    # path('', main_views.homepage, name='homepage'),
     path('', lambda request: redirect('laboratoria/', permanent=True), name='homepage'),
     path('info',main_views.infopage,name='infopage'),
     path('contact',main_views.contact,name='contact'),

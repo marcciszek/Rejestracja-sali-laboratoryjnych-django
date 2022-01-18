@@ -1,7 +1,11 @@
 from django.db import models
 from django.conf import settings
-
 from django.utils.translation import gettext, gettext_lazy as _
+from django.contrib.auth.models import User
+
+
+# make email unique on a database level
+User._meta.get_field('email')._unique = True
 
 
 class Profile(models.Model):

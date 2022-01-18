@@ -431,7 +431,7 @@ function run()
             const headers = new Headers();
             headers.append('X-CSRFToken', csrftoken);
             //alert(document.querySelector('[name=csrfmiddlewaretoken]').value);
-			fetch("test", {
+			fetch("api/order_submit", {
 			  method: 'POST',
               body: data,
               mode: 'same-origin',
