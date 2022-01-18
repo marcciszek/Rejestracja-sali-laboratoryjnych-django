@@ -43,8 +43,6 @@ function generateCalendarCells(month,year)
 	if (isLeapYear(year)) monthLengths[1] = 29;
 	const firstDay = new Date(year,month,1);
 	const firstWeekday = firstDay.getDay();
-	console.log("dzien tyg",firstWeekday);
-	console.log("dzien ",firstDay);
 
 	const calendarCells = [...document.querySelectorAll('.calendar-cell')];
 	let cellCount = 0;
@@ -437,25 +435,18 @@ function run()
 		{
 			const el = e.target.parentNode;
 			const timeobj = {date:currentDay,time:Number(el.getAttribute('value'))};
-			console.log("timeojb",timeobj);
 			const res = indexOfList(chosentimelist,timeobj);
 			if (res>-1)
 			{
 				chosentimelist.splice(res,1);
-				//el.classList.remove('scheme-row-chosen');
 				setSchemeRowNotChosen(el);
 			}
 			else
 			{
 				chosentimelist.push(timeobj);
-				//el.classList.add('scheme-row-chosen');
 				setSchemeRowChosen(el);
 			}
 			insertTimeIntervalLabelsList(getIntervalLabelsList(chosentimelist));
-			//console.log(getDividedIntervalsList(chosentimelist));
-			console.log(chosentimelist);
-			console.log(getIntervals(chosentimelist));
-			console.log(JSON.parse(getIntervalsShippingObject(chosentimelist)));
 		}
 	}
     /*
@@ -472,9 +463,7 @@ function run()
 		e.preventDefault();
 		if (confirm(getOrderAlertText(getIntervalLabelsList(chosentimelist),orderMessageArea.value)))
 		{
-			console.log("wszedlem do funkcji, gdzie generuje sie request post (fetch)");
 			const data = getIntervalsShippingObject(chosentimelist);
-			console.log(data);
 			const csrftoken = getCookie('csrftoken');
             const headers = new Headers();
             headers.append('X-CSRFToken', csrftoken);
@@ -503,7 +492,7 @@ function run()
 			  //window.location.reload();
 			})
 			.catch((error) => {
-			  console.error('Error:', error);
+			  alert("Błąd przy wysyłaniu zamówienia. \n\nCzy na pewno wybrałeś poprawne okresy czasowe?");
 			});
 		}
 	}
@@ -562,7 +551,6 @@ function run()
 	function clearDisabledOnButtons()
 	{
 	    const buttons = document.getElementById('calendar-day-details').getElementsByClassName('scheme-cell-choosebtn');
-	    console.log('buttons',buttons);
 	    [...buttons].forEach((el)=>{
 	        el.disabled = false;
 	    });
@@ -648,14 +636,11 @@ function run()
 	function setCurrentDayValues()
 	{
 		const now = new Date();
-		console.log('now',now);
 		month_input.value = now.getMonth();
 		year_input.value = now.getFullYear();
 
 		currentDay = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 		dayheader.innerText = getDayString(currentDay);
-		//[...document.querySelectorAll('.calendar-cell-active')][currentDay.getDate()-1].classList.add('calendar-cell-current');
-		//calendarCells[currentDay.getDate()-1].classList.add('calendar-cell-current');
 	}
 
     function clearCalendarCells()
@@ -671,7 +656,6 @@ function run()
 	    const activecells = [...document.querySelectorAll('.calendar-cell-active')];
 	    if (activecells==null || activecells.length<28)
 	        {
-	            console.log("error with calendar cells",activecells);
 	            return;
 	        }
 	    try{
@@ -681,14 +665,13 @@ function run()
                 {
                     if (i==dayId)
                     {
-                        console.log(day);
                         activecells[i].classList.add('calendar-cell-current');
                         break;
                     }
                 }
             }
 	    catch{
-            console.log("day out of bounds.");
+            alert("Error: day out of bounds.");
             return;
 	    }
 	}
@@ -709,18 +692,14 @@ function run()
         const intervals = getIntervals(chosentimelist);
         const current = intervals.filter((el)=>{
             const result = checkIfDatesSameDay(new Date(el.date),currentDay);
-            console.log(result);
 			return result;
 		});
-		        //console.log(intervals,current);
-		//if (current.length>0) console.log(current);
 		const schemeRows = [...document.getElementsByClassName('scheme-row')];
 		schemeRows.forEach((el)=>
 		{
 		    setSchemeRowNotChosen(el);
 		});
 		if (current==null || current==undefined || current.length<=0) return;
-		console.log(current);
 		current[0].intervals.forEach((i)=>{
 		    setSchemeRowChosen(schemeRows[i]);
 		});
