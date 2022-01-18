@@ -488,9 +488,19 @@ function run()
 			})
 			.then(response => response.json())
 			.then(data => {
+			  if (data.errorCode == 0)
+			  {
+			    alert("Wysłano zamówienie.\n\nStrona zostanie odświeżona.");
+			    window.location.reload();
+			    return;
+			  }
+			  else
+			  {
+			    alert("Błąd przy wysyłaniu zamówienia. \n\n"+data.error);
+			  }
 			  console.log('Success:', data);
-			  alert("Wysłano zamówienie.\n\nStrona zostanie odświeżona.");
-			  window.location.reload();
+
+			  //window.location.reload();
 			})
 			.catch((error) => {
 			  console.error('Error:', error);
