@@ -1,8 +1,10 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Information{% endblock %}
 {% block content %}
 {% include 'navbar.html' %}
     <h1>Information</h1>
     <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sem risus, bibendum sit amet tristique id, condimentum non mi. Vivamus malesuada lobortis lectus sit amet maximus. Fusce fringilla nulla bibendum, interdum nulla id, lobortis nibh. Praesent sagittis leo cursus leo cursus dignissim. Praesent suscipit porta mattis. Fusce urna odio, cursus at ornare in, condimentum id tellus. Nullam efficitur erat ut erat lacinia accumsan. Donec ultricies lacus magna, id laoreet urna gravida vel. Vestibulum rhoncus a magna quis congue. Nullam dictum tempus felis interdum pretium. Morbi nulla lectus, ornare nec accumsan at, elementum id lacus. Praesent sed neque vel eros euismod molestie ut ac eros. Nam viverra, dolor at varius tempor, risus mauris viverra ante, feugiat malesuada nisl sem non est. Nunc non euismod leo. Phasellus id massa at ex egestas venenatis. </p>
+    <img src="{% static 'img/lab1.PNG' %}" alt = "lab1" width="600" height="400" />
+    <img src="{% static 'img/lab2.png' %}" alt = "lab1" width="600" height="400"  />
 {% endblock %}
