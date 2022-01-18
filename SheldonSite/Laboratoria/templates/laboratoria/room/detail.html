@@ -14,11 +14,11 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-  <h1>
-    <a href="{% url 'laboratoria:room_list' %}">
-      Lista Laboratoriów Instytutu Fizyki
+  <h3>
+    <a id = "lablist_anchor" href="{% url 'laboratoria:room_list' %}">
+      &lt;&lt;&nbsp;Lista Laboratoriów Instytutu Fizyki
     </a>
-  </h1>
+  </h3>
 	<div id = "main-container">
 		<div id = "room-information">
 			<h2 id = "room-name">{{room.title}}</h2>
