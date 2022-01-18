@@ -3,6 +3,40 @@ function isLeapYear(year)
 	return (year%4==0 && year%100!=0) ||  (year%400 == 0)
 }
 
+function checkIfDateBooked(date,roomData)
+{
+    for (let i = 0 ; i < roomData.length ; i++)
+    {
+        const bookeddate = new Date(roomData[i].fields.registerDate);
+        if (checkIfDatesSameDay(date,bookeddate))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function clearCalendarCells()
+{
+    const cells = document.getElementsByClassName('calendar-cell');
+    [...cells].forEach((cell)=>{
+        cell.classList.remove('calendar-cell-booked');
+    });
+}
+
+function colorCalendarCellsWithBookings(roomData,month,year)
+{
+    clearCalendarCells();
+    const activecells = document.getElementsByClassName('calendar-cell-active');
+    [...activecells].forEach((cell)=>{
+        const cellDate = new Date(Number(year),Number(month),Number(cell.innerText));
+        if (checkIfDateBooked(cellDate,roomData))
+        {
+            cell.classList.add('calendar-cell-booked');
+        }
+    });
+}
+
 function generateCalendarCells(month,year)
 {
 	const monthLengths = [31,28,31,30,31,30,31,31,30,31,30,31];
@@ -201,6 +235,7 @@ function getIntervals(intervalsList)
 	return list;
 }
 
+
 function getIntervalsShippingObject(intervalsList)
 {
     const mainObj = {}
@@ -326,7 +361,7 @@ function run()
 	//INSERT DATA
     //let currentDay;
 	//setCurrentDayValues();
-    getRoomData()
+    getRoomData();
 
 
 	const chosentimelist = [];
@@ -340,6 +375,7 @@ function run()
 	function handleMonthInput()
 	{
 		generateCalendarCells(month_input.value,year_input.value);
+		colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 		markDayOnCalendarIfNeeded();
 		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
@@ -354,6 +390,7 @@ function run()
 		month_input.value = newMonth.month;
 		year_input.value = newMonth.year;
 		generateCalendarCells(month_input.value,year_input.value);
+		colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 		markDayOnCalendarIfNeeded();
 		//calendarCells = document.querySelectorAll('.calendar-cell-active');
 	}
@@ -576,6 +613,8 @@ function run()
 			  const obj = JSON.parse(data);
 			  console.log(obj);
 			  roomData = obj;
+			  colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
+			  markDayOnCalendarIfNeeded();
 			  updateRoomData(roomData);
 			  alert("Uzyskano dane.");
 			})

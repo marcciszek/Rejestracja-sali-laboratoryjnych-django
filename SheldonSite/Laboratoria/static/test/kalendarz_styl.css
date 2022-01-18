@@ -50,12 +50,17 @@ margin:5px;
 
 .calendar-cell-current
 {
-	background: lightblue;
+	background: lightblue !important;
 }
 
 .calendar-cell-chosen
 {
 	background: purple;
+}
+
+.calendar-cell-booked
+{
+    background: #ffcc99;
 }
 
 .calendar-cell-
