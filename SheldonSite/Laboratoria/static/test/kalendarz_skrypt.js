@@ -477,7 +477,7 @@ function run()
 			})
 			.then(response => response.json())
 			.then(data => {
-			  if (data.errorCode == 0)
+			  if (data.error_code == 0)
 			  {
 			    alert("Wysłano zamówienie.\n\nStrona zostanie odświeżona.");
 			    window.location.reload();
@@ -619,9 +619,7 @@ function run()
 			})
 			.then(response => response.json())
 			.then(data => {
-			  console.log('Success:', data);
 			  const obj = JSON.parse(data);
-			  console.log(obj);
 			  roomData = obj;
 			  colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 			  markDayOnCalendarIfNeeded();
