@@ -489,7 +489,8 @@ function run()
 			.then(response => response.json())
 			.then(data => {
 			  console.log('Success:', data);
-			  alert("Wysłano zamówienie.");
+			  alert("Wysłano zamówienie.\n\nStrona zostanie odświeżona.");
+			  window.location.reload();
 			})
 			.catch((error) => {
 			  console.error('Error:', error);
@@ -627,7 +628,7 @@ function run()
 			  colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 			  markDayOnCalendarIfNeeded();
 			  updateRoomData(roomData);
-			  alert("Uzyskano dane.");
+			  //alert("Uzyskano dane.");
 			})
 			.catch((error) => {
 			  console.error('Error:', error);
