@@ -32,7 +32,8 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(RegistrationEntry)
 class RegistrationEntryAdmin(admin.ModelAdmin):
-    list_display = ('registerDate', 'roomConnector', 'reserved', 'pending')
+    # list_display = ('registerDate', 'roomConnector', 'reserved', 'pending')
+    list_display = ('registerDate', 'roomConnector', 'reserved')
     readonly_fields = ('year_copy', 'month_copy',)
 
     def _check_permisson_entry_admin(self, request):
@@ -54,3 +55,12 @@ class RegistrationEntryAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return self._check_permisson_entry_admin(request)
+
+@admin.register(RegistrationEntry)
+class RegistrationPendingAdmin(admin.ModelAdmin):
+    list_display = ('room',
+                    'user',
+                    'date',
+                    'intervals',
+                    'user_mentor',
+                    'processed', '')

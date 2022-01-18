@@ -57,6 +57,7 @@ def day_detail(request, day):
                   'laboratoria/reservation/day.html',
                   {'day': day})
 
+from account.models import Profile
 
 @ensure_csrf_cookie
 @requires_csrf_token
@@ -64,12 +65,14 @@ def order_submit(request):
     if request.method == "POST":
         logging.config.dictConfig(LOGGING)
 
-        response_data = {'foo': 'bar'}
+        response_data = {}
 
         # unpack incoming data
         data = json.loads(request.body)
 
         username_r = request.user
+        user_rank = request.user.profile.user_rank
+        user_rank_name = Profile.Rank(user_rank).name
         message = data['message']
         date_now = date.today()
         date_r = date.fromisoformat(data['list'][0]['date'])
@@ -78,6 +81,7 @@ def order_submit(request):
         slug = data['slug']
 
         logging.info("user       --> " + str(username_r))
+        logging.info("user rank  --> " + str(user_rank) + " : " + user_rank_name)
         logging.info("date now   --> " + str(date_now))
         logging.info("date req   --> " + str(date_r))
         logging.info("intervals  --> " + str(intervals))
@@ -89,6 +93,7 @@ def order_submit(request):
         date_diff = (date_r-date_now).days
         if date_diff < 7:
             response_data['error'] = 'minimum 7 days'
+            response_data['error_code'] = 1
             logging.info("Error: no 7 days minimum")
             return JsonResponse(response_data)
 
@@ -101,10 +106,10 @@ def order_submit(request):
 
             # check for reservation colision
             for _ in reservation_exist[0].reserved:
-                logging.info(int(_))
                 if int(_) in intervals:
                     logging.info("Error: reservation already exists")
                     response_data['error'] = 'reservation already exists'
+                    response_data['error_code'] = 2
                     return JsonResponse(response_data)
 
             logging.info("brak kolizji, tworzenie rezerwacji")
@@ -116,6 +121,7 @@ def order_submit(request):
             _new_reservation(date_r, room, intervals, username_r)
 
         logging.info("Everything seems ok")
+        response_data['error_code'] = 0
         response_data['error'] = 'none'
         return JsonResponse(response_data)
 
@@ -128,10 +134,6 @@ def order_submit(request):
 def _new_reservation(date, room, interv, user):
     logging.config.dictConfig(LOGGING)
     logging.info("_new_reservation")
-    logging.info(date)
-    logging.info(room)
-    logging.info(interv)
-    logging.info(user)
 
     new_register = RegistrationEntry()
     new_register.registerDate = date
@@ -199,10 +201,6 @@ def _new_reservation(date, room, interv, user):
 def _update_reservation(res_new, interv, reserv, user):
     logging.config.dictConfig(LOGGING)
     logging.info("_update_reservation")
-    logging.info(res_new)
-    logging.info(interv)
-    logging.info(reserv)
-    logging.info(user)
 
     reserved_new = res_new
     intervals = interv
