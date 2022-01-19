@@ -7,7 +7,13 @@ function checkIfDateBooked(date,roomData)
 {
     for (let i = 0 ; i < roomData.length ; i++)
     {
-        const bookeddate = new Date(roomData[i].fields.registerDate);
+        let bookeddate = undefined;
+        if (roomData[i].fields.registerDate==null || roomData[i].fields.registerDate==undefined)
+        {
+            if (roomData[i].fields.date==null || roomData[i].fields.date==undefined) continue;
+            bookeddate = new Date(roomData[i].fields.date);
+        }
+        else bookeddate = new Date(roomData[i].fields.registerDate);
         if (checkIfDatesSameDay(date,bookeddate))
         {
             return true;
@@ -528,6 +534,42 @@ function run()
 	    return element;
 	}
 
+	function getCurrentDayPending(data)
+	{
+	    pendingdata = getPendingData(data);
+	    list = [];
+	    pendingdata.forEach((el)=>{
+	        const date = new Date(el.fields.date);
+	        if (checkIfDatesSameDay(date,currentDay))
+	        {
+	            list.push(el);
+	        }
+	    });
+	    return list;
+	}
+
+	function getPendingDictionary(pendingdata)
+	{
+	    let dict = new Object()
+	    pendingdata.forEach((el)=>{
+	        intervals = el.fields.intervals.split(',');
+	        intervals.forEach((i)=>{
+	            if (i<0 || i >23) return;
+	            const index = i.toString();
+	            if (dict[index]==undefined || dict[index]==null)
+	            {
+                    dict[index] = [el.fields.user].flat();
+	            }
+	            else
+	            {
+	                dict[index].push(el.fields.user);
+	                dict[index] = dict[index].flat();
+	            }
+	        });
+	    });
+	    return dict;
+	}
+
 	function setDefaultScheme()
 	{
 	    const scheme = document.getElementById('calendar-day-scheme');
@@ -556,38 +598,62 @@ function run()
 	    });
 	}
 
+	function getPendingData(data)
+	{
+	    return data.filter((el)=>el.model=="Laboratoria.registrationpending");
+	}
+
 	function updateRoomData(data)
 	{
         const currentDayData = getCurrentDayObject(data);
         setDefaultScheme();
-        if (currentDayData == null) return;
         const schemeRows = [...document.getElementsByClassName('scheme-row')];
-        const reservedbase = currentDayData.fields.reserved
-        if (reservedbase != null && reservedbase != undefined && reservedbase[0]!="" && reservedbase.length>0)
+        if (currentDayData != null)
         {
-            const reserved = reservedbase.split(',');
-            reserved.forEach((i)=>{
-                const interval = parseInt(i);
-                const content = schemeRows[interval].querySelector('.scheme-cell-content');
-                content.className = getSchemeContentType('red');
-                content.innerHTML = "";
-                content.insertAdjacentHTML('beforeend', getSchemeCellContent(getRegisteredPeopleArray(currentDayData,interval)));
-            });
+            const reservedbase = currentDayData.fields.reserved
+            if (reservedbase != null && reservedbase != undefined && reservedbase[0]!="" && reservedbase.length>0)
+            {
+                const reserved = reservedbase.split(',');
+                reserved.forEach((i)=>{
+                    const interval = parseInt(i);
+                    const content = schemeRows[interval].querySelector('.scheme-cell-content');
+                    content.className = getSchemeContentType('red');
+                    content.innerHTML = "";
+                    content.insertAdjacentHTML('beforeend', getSchemeCellContent(getRegisteredPeopleArray(currentDayData,interval)));
+                });
+            }
         }
-        const pendingbase = currentDayData.fields.pending
+        const pendingbase = getPendingData(data);
+        //console.log(pendingbase);
+        const pendingdict = getPendingDictionary(getCurrentDayPending(data));
+        console.log("dict:",pendingdict);
+        /*
         if (pendingbase != null && pendingbase != undefined && pendingbase[0]!="" && pendingbase.length>0)
         {
-            const pending = pendingbase.split(',');
-            pending.forEach((i)=>{
+            pendingbase.forEach((i)=>{
+
                 const interval = parseInt(i);
                 const content = schemeRows[interval].querySelector('.scheme-cell-content');
                 content.className = getSchemeContentType('orange');
                 //TODO: handling pending usernames
                 //TODO: orange intervals different on conflicts (stripes)
                 content.innerHTML = "";
+
             });
         }
+        */
+
+        for (let i = 0 ; i < 24; i++)
+        {
+            const index = i.toString();
+            if (pendingdict[index]==null || pendingdict[index]==undefined) continue;
+            const content = schemeRows[i].querySelector('.scheme-cell-content');
+            content.className = getSchemeContentType('orange');
+            content.innerHTML = "";
+            content.insertAdjacentHTML('beforeend', getSchemeCellContent(pendingdict[index]));
+        }
         clearDisabledOnButtons();
+        /*
         const disabledbase = currentDayData.fields.disabled
         if (disabledbase != null && disabledbase != undefined && disabledbase[0]!="" && disabledbase.length>0)
         {
@@ -600,6 +666,7 @@ function run()
                 button.disabled = true;
             });
         }
+        */
         return;
 	}
 
@@ -620,6 +687,7 @@ function run()
 			.then(response => response.json())
 			.then(data => {
 			  const obj = JSON.parse(data);
+			  console.log("ob",obj);
 			  roomData = obj;
 			  colorCalendarCellsWithBookings(roomData,month_input.value,year_input.value);
 			  markDayOnCalendarIfNeeded();
