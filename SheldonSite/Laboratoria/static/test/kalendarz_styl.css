@@ -24,12 +24,16 @@ margin:5px;
 
 .calendar-cell
 {
-	border: 2px solid lightblue;
+	border: 2px solid navy;
+	margin: 1px;
 }
 
 .calendar-cell-header
 {
-	border: 2px solid blue;
+	border: 2px solid navy;
+	margin: 1px;
+	background: #3366ff;
+	color:#fff;
 	font-weight: bold;
 }
 
@@ -50,12 +54,17 @@ margin:5px;
 
 .calendar-cell-current
 {
-	background: lightblue;
+	background: lightblue !important;
 }
 
 .calendar-cell-chosen
 {
 	background: purple;
+}
+
+.calendar-cell-booked
+{
+    background: #ffcc99;
 }
 
 .calendar-cell-

@@ -62,6 +62,7 @@ def day_detail(request, day):
                   'laboratoria/reservation/day.html',
                   {'day': day})
 
+
 @login_required
 def unprocessed_pendings(request):
     if request.user.profile.user_rank == 0:
@@ -70,6 +71,7 @@ def unprocessed_pendings(request):
                       'laboratoria/pendings_all.html',
                       {'pendings': pendings})
     return redirect('laboratoria:room_list')
+
 
 
 @ensure_csrf_cookie

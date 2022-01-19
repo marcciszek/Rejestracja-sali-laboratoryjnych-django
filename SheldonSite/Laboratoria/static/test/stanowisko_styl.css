@@ -106,3 +106,10 @@ div.scheme-cell-label{
 a{
 color:blue;
 }
+
+#lablist_anchor
+{
+    text-decoration:none;
+    font-style:italic;
+    color:navy;
+}
