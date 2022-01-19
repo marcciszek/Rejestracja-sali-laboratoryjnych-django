@@ -28,9 +28,13 @@ class Room(models.Model):
                                 default=0,
                                 verbose_name="Piętro")
 
-    room_number = models.PositiveIntegerField(verbose_name="Numer pokoju", validators=[MinValueValidator(1), MaxValueValidator(100_000)])
+    room_number = models.PositiveIntegerField(verbose_name="Numer pokoju",
+                                              validators=[MinValueValidator(1),
+                                                          MaxValueValidator(100_000)])
     room_station = models.PositiveIntegerField(default=1,
-                                               verbose_name="Numer stanowiska", validators=[MinValueValidator(1), MaxValueValidator(100_000)])
+                                               verbose_name="Numer stanowiska",
+                                               validators=[MinValueValidator(1),
+                                                           MaxValueValidator(100_000)])
     title = models.CharField(max_length=50,
                              verbose_name="Nazwa pokoju")
     description = models.TextField(verbose_name="Opis")
@@ -142,11 +146,6 @@ class RegistrationEntry(models.Model):
                                 max_length=100,
                                 verbose_name="Zarezerwowane")
 
-    pending = MultiSelectField(choices=HoursInDay.choices,
-                               blank=True,
-                               max_choices=24,
-                               max_length=100,
-                               verbose_name="Oczekujące")
 
     res_name_0 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn0', verbose_name="00:00 - 01:00")
     res_name_1 = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='rn1', verbose_name="01:00 - 02:00")
@@ -197,3 +196,39 @@ class RegistrationEntry(models.Model):
     objects = models.Manager()
     # custom manager
     objects_custom = CustomManager()
+
+
+class CustomPendingManager(models.Manager):
+
+    def pendings_all(self, room):
+        return super(CustomPendingManager, self). \
+            get_queryset() \
+            .filter(room=room) \
+            .order_by('date')
+
+    def pendings_unprocessed(self):
+        return super(CustomPendingManager, self). \
+            get_queryset() \
+            .filter(processed=False) \
+            .order_by('room', 'date')
+
+
+class RegistrationPending(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    intervals = MultiSelectField(choices=RegistrationEntry.HoursInDay.choices,
+                                 blank=True,
+                                 max_choices=24,
+                                 max_length=100,
+                                 verbose_name="Oczekujące")
+    user_mentor = models.ForeignKey(User,
+                                    on_delete=models.SET_NULL,
+                                    null=True,
+                                    blank=True,
+                                    related_name="user_m")
+    additional_info = models.TextField(blank=True,
+                                       max_length = 255)
+    processed = models.BooleanField(default=False)
+
+    objects_custom = CustomPendingManager()

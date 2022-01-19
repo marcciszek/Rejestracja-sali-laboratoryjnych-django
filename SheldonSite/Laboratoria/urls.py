@@ -21,4 +21,7 @@ urlpatterns = [
     path('reservation/<slug:day>',
          views.day_detail,
          name='day_detail'),
+    path('pendings/all',
+         views.unprocessed_pendings,
+         name='pendings'),
 ]
