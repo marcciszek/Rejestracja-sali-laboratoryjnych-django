@@ -53,7 +53,7 @@ def room_detail_api(request, room):
         pendings = RegistrationPending.objects_custom.pendings_all(room)
         all_data = list(chain(registers,pendings))
         data = serialize("json", all_data, use_natural_foreign_keys=True)
-        logging.info(data)
+        #logging.info(data)
         return JsonResponse(data, safe=False)
 
 
