@@ -2,6 +2,7 @@ import json, logging, logging.config, sys
 from datetime import datetime, date
 from .models import Room, RegistrationEntry, RegistrationPending
 from account.models import Profile
+from itertools import chain
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -46,12 +47,13 @@ def room_detail(request, room):
 @login_required
 def room_detail_api(request, room):
     if request.method == "GET":
+        logging.config.dictConfig(LOGGING)
         room = get_object_or_404(Room, slug=room)
         registers = RegistrationEntry.objects_custom.all_entries(room)
         pendings = RegistrationPending.objects_custom.pendings_all(room)
-        all_data = [registers, pendings]
-        data = serialize("json", registers, use_natural_foreign_keys=True)
-        # data = serialize("json", all_data, use_natural_foreign_keys=True)
+        all_data = list(chain(registers,pendings))
+        data = serialize("json", all_data, use_natural_foreign_keys=True)
+        logging.info(data)
         return JsonResponse(data, safe=False)
 
 
