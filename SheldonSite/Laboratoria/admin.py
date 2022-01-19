@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Room, RegistrationEntry
+from .models import Room, RegistrationEntry, RegistrationPending
 
 
 @admin.register(Room)
@@ -56,11 +56,12 @@ class RegistrationEntryAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return self._check_permisson_entry_admin(request)
 
-@admin.register(RegistrationEntry)
+@admin.register(RegistrationPending)
 class RegistrationPendingAdmin(admin.ModelAdmin):
     list_display = ('room',
                     'user',
                     'date',
                     'intervals',
                     'user_mentor',
-                    'processed', '')
+                    'additional_info',
+                    'processed')

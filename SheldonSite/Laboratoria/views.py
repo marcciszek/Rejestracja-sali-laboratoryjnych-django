@@ -1,7 +1,9 @@
 import json, logging, logging.config, sys
 from datetime import datetime, date
-from .models import Room, RegistrationEntry
-from django.shortcuts import render, get_object_or_404
+from .models import Room, RegistrationEntry, RegistrationPending
+from account.models import Profile
+
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.core.serializers import serialize
@@ -46,7 +48,10 @@ def room_detail_api(request, room):
     if request.method == "GET":
         room = get_object_or_404(Room, slug=room)
         registers = RegistrationEntry.objects_custom.all_entries(room)
+        pendings = RegistrationPending.objects_custom.pendings_all(room)
+        all_data = [registers, pendings]
         data = serialize("json", registers, use_natural_foreign_keys=True)
+        # data = serialize("json", all_data, use_natural_foreign_keys=True)
         return JsonResponse(data, safe=False)
 
 
@@ -57,7 +62,15 @@ def day_detail(request, day):
                   'laboratoria/reservation/day.html',
                   {'day': day})
 
-from account.models import Profile
+@login_required
+def unprocessed_pendings(request):
+    if request.user.profile.user_rank == 0:
+        pendings = RegistrationPending.objects_custom.pendings_unprocessed()
+        return render(request,
+                      'laboratoria/pendings_all.html',
+                      {'pendings': pendings})
+    return redirect('laboratoria:room_list')
+
 
 @ensure_csrf_cookie
 @requires_csrf_token
@@ -80,6 +93,11 @@ def order_submit(request):
         department = data['department']
         slug = data['slug']
 
+        room = Room.available.get_room_from_slug(slug)
+        reservation_exist = RegistrationEntry.\
+            objects_custom.\
+            day_filter(date_r, room[0])
+
         logging.info("user       --> " + str(username_r))
         logging.info("user rank  --> " + str(user_rank) + " : " + user_rank_name)
         logging.info("date now   --> " + str(date_now))
@@ -89,22 +107,51 @@ def order_submit(request):
         logging.info("department --> " + department)
         logging.info("slug       --> " + slug)
 
+        # non verified user
+        if user_rank == 4:
+            logging.info("Error: user not verified")
+            response_data['error'] = 'non verified user'
+            response_data['error_code'] = 3
+            return  JsonResponse(response_data)
+
+        # users whose reservations must be accepted by the administrator
+        if user_rank in [2 ,3]:
+            new_pending = RegistrationPending()
+            if reservation_exist:
+                logging.info("object for this day exists, check for colisions")
+                # check for reservation colisions
+                for _ in reservation_exist[0].reserved:
+                    if int(_) in intervals:
+                        logging.info("Error: reservation already exists")
+                        response_data['error'] = 'reservation already exists'
+                        response_data['error_code'] = 2
+                        return JsonResponse(response_data)
+
+            logging.info("new pending object data filling")
+            new_pending.room = room[0]
+            new_pending.user = username_r
+            new_pending.date = date_r
+            new_pending.intervals = intervals
+            new_pending.additional_info = message
+            new_pending.save()
+            logging.info('new pending created')
+            response_data['error_code'] = 0
+            response_data['error'] = 'none'
+            return JsonResponse(response_data)
+
         # prevent from register in the current week
         date_diff = (date_r-date_now).days
         if date_diff < 7:
-            response_data['error'] = 'minimum 7 days'
-            response_data['error_code'] = 1
             logging.info("Error: no 7 days minimum")
+            response_data['error'] = 'minimum 7 days dleay required'
+            response_data['error_code'] = 1
             return JsonResponse(response_data)
-
-        room = Room.available.get_room_from_slug(slug)
-        reservation_exist = RegistrationEntry.objects_custom.day_filter(date_r, room[0])
 
         # updating exist reservation
         if reservation_exist:
-            logging.info("obiekt dla tego dnia isntieje, proba aktualizacji")
+            logging.info("object for this day exists, actualization attempt")
 
-            # check for reservation colision
+            # check for reservation colisions
             for _ in reservation_exist[0].reserved:
                 if int(_) in intervals:
                     logging.info("Error: reservation already exists")
@@ -112,13 +159,19 @@ def order_submit(request):
                     response_data['error_code'] = 2
                     return JsonResponse(response_data)
 
-            logging.info("brak kolizji, tworzenie rezerwacji")
+            logging.info("no colissions, make a new reservation")
             reserved_new = list(reservation_exist[0].reserved)
-            _update_reservation(reserved_new, intervals, reservation_exist, username_r)
+            _update_reservation(reserved_new,
+                                intervals,
+                                reservation_exist,
+                                username_r)
         # create new object for new reservation
         else:
-            logging.info("brak obiektu dla danej daty, proba utworzenia")
-            _new_reservation(date_r, room, intervals, username_r)
+            logging.info("no object for this date, create attempt")
+            _new_reservation(date_r,
+                             room,
+                             intervals,
+                             username_r)
 
         logging.info("Everything seems ok")
         response_data['error_code'] = 0
